@@ -6,8 +6,8 @@
 - [**유병연**](https://github.com/youbyeongyeon) -
 - [**이유경**](https://github.com/dldbrud) -
 
-중간 -> 주제발표
-기말 -> 프로젝트 구현 데드라인
+중간 -> 주제발표  
+기말 -> 프로젝트 구현
 
 ## 🎯 주제
 
