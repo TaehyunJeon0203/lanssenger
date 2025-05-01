@@ -1,13 +1,20 @@
 {
-  "name": "C++ Dev",
+  "name": "ChatMessenger Dev Container",
   "build": {
-    "dockerfile": "Dockerfile",
-    "context": ".."
+    "dockerfile": "Dockerfile"
   },
-  "settings": {
-    "terminal.integrated.defaultProfile.linux": "bash"
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      },
+      "extensions": [
+        "ms-vscode.cpptools",
+        "ms-vscode.cmake-tools",
+        "llvm-vs-code-extensions.vscode-clangd"
+      ]
+    }
   },
-  "extensions": ["ms-vscode.cpptools", "ms-vscode.cmake-tools", "twxs.cmake"],
-  "postCreateCommand": "cmake -S . -B build",
-  "remoteUser": "vscode"
+  "mounts": ["source=${localWorkspaceFolder},target=/workspace,type=bind"],
+  "workspaceFolder": "/workspace"
 }
