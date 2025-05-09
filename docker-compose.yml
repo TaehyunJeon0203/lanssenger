@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  dev:
+    build: .
+    volumes:
+      - .:/app
+    environment:
+      - DISPLAY=${DISPLAY}
+    command: /bin/bash
