@@ -1,13 +1,8 @@
 #include "server/server.hpp"
 #include <QDebug>
 
-/**
- * @brief 서버 객체 생성자
- * 
- * TCP 서버를 초기화하고 새로운 연결을 처리하기 위한 시그널/슬롯 연결을 설정합니다.
- * 
- * @param parent 부모 QObject
- */
+// 서버 객체 생성자
+// TCP 서버를 초기화하고 새로운 연결을 처리하기 위한 시그널/슬롯 연결을 설정
 Server::Server(QObject *parent)
     : QObject(parent)
     , server_(std::make_unique<QTcpServer>(this))
@@ -16,24 +11,15 @@ Server::Server(QObject *parent)
     connect(server_.get(), &QTcpServer::newConnection, this, &Server::handleNewConnection);
 }
 
-/**
- * @brief 서버 객체 소멸자
- * 
- * 서버를 중지하고 모든 클라이언트 연결을 정리합니다.
- */
+// 서버 객체 소멸자
+// 서버를 중지하고 모든 클라이언트 연결을 정리
 Server::~Server()
 {
     stop();
 }
 
-/**
- * @brief 서버를 시작합니다.
- * 
- * 지정된 포트에서 클라이언트의 연결을 수락하기 시작합니다.
- * 
- * @param port 서버가 리스닝할 포트 번호
- * @return 서버 시작 성공 여부
- */
+// 서버를 시작
+// 지정된 포트에서 클라이언트의 연결을 수락하기 시작
 bool Server::start(quint16 port)
 {
     if (!server_->listen(QHostAddress::Any, port)) {
@@ -43,11 +29,8 @@ bool Server::start(quint16 port)
     return true;
 }
 
-/**
- * @brief 서버를 중지합니다.
- * 
- * 서버를 중지하고 모든 클라이언트 연결을 종료합니다.
- */
+// 서버를 중지
+// 서버를 중지하고 모든 클라이언트 연결을 종료
 void Server::stop()
 {
     if (server_->isListening()) {
@@ -60,22 +43,14 @@ void Server::stop()
     }
 }
 
-/**
- * @brief 서버의 실행 상태를 확인합니다.
- * 
- * @return 서버 실행 상태 (true: 실행 중, false: 중지됨)
- */
+// 서버의 실행 상태를 확인
 bool Server::isRunning() const
 {
     return server_->isListening();
 }
 
-/**
- * @brief 새로운 클라이언트 연결을 처리하는 슬롯
- * 
- * 새로운 클라이언트가 연결되면 필요한 시그널/슬롯 연결을 설정하고
- * 클라이언트 목록에 추가합니다.
- */
+// 새로운 클라이언트 연결을 처리하는 슬롯
+// 새로운 클라이언트가 연결되면 필요한 시그널/슬롯 연결을 설정하고 클라이언트 목록에 추가
 void Server::handleNewConnection()
 {
     QTcpSocket *clientSocket = server_->nextPendingConnection();
@@ -90,12 +65,8 @@ void Server::handleNewConnection()
     emit clientConnected(clientAddress);
 }
 
-/**
- * @brief 클라이언트 연결 해제를 처리하는 슬롯
- * 
- * 클라이언트가 연결을 해제하면 클라이언트 목록에서 제거하고
- * 관련 리소스를 정리합니다.
- */
+// 클라이언트 연결 해제를 처리하는 슬롯
+// 클라이언트가 연결을 해제하면 클라이언트 목록에서 제거하고 관련 리소스를 정리
 void Server::handleClientDisconnection()
 {
     QTcpSocket *clientSocket = qobject_cast<QTcpSocket*>(sender());
@@ -107,12 +78,8 @@ void Server::handleClientDisconnection()
     }
 }
 
-/**
- * @brief 클라이언트로부터의 데이터를 처리하는 슬롯
- * 
- * 클라이언트로부터 메시지를 수신하면 다른 모든 클라이언트에게
- * 브로드캐스팅합니다.
- */
+// 클라이언트로부터의 데이터를 처리하는 슬롯
+// 클라이언트로부터 메시지를 수신하면 다른 모든 클라이언트에게 브로드캐스팅
 void Server::handleClientData()
 {
     QTcpSocket *clientSocket = qobject_cast<QTcpSocket*>(sender());

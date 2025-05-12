@@ -4,15 +4,8 @@
 #include <QTextStream>
 #include <iostream>
 
-/**
- * @brief LAN 메신저 클라이언트의 메인 함수
- * 
- * 명령줄 인터페이스를 통해 서버에 연결하고 메시지를 주고받는 기능을 제공합니다.
- * 
- * @param argc 명령줄 인자의 개수
- * @param argv 명령줄 인자 배열
- * @return 프로그램 종료 코드
- */
+// LAN 메신저 클라이언트의 메인 함수
+// 명령줄 인터페이스를 통해 서버에 연결하고 메시지를 주고받는 기능을 제공
 int main(int argc, char *argv[])
 {
     // Qt 애플리케이션 초기화

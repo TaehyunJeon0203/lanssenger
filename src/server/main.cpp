@@ -3,15 +3,8 @@
 #include <QCommandLineParser>
 #include <QTextStream>
 
-/**
- * @brief LAN 메신저 서버의 메인 함수
- * 
- * 명령줄 인터페이스를 통해 서버를 시작하고 클라이언트의 연결을 관리합니다.
- * 
- * @param argc 명령줄 인자의 개수
- * @param argv 명령줄 인자 배열
- * @return 프로그램 종료 코드
- */
+// LAN 메신저 서버의 메인 함수
+// 명령줄 인터페이스를 통해 서버를 시작하고 클라이언트의 연결을 관리
 int main(int argc, char *argv[])
 {
     // Qt 애플리케이션 초기화
