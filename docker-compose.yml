@@ -1,10 +1,14 @@
 version: "3"
 
 services:
-  dev:
+  server:
     build: .
-    volumes:
-      - .:/app
-    environment:
-      - DISPLAY=${DISPLAY}
-    command: /bin/bash
+    ports:
+      - "8080:8080"
+    command: ./server
+
+  client:
+    build: .
+    command: ./client
+    depends_on:
+      - server
