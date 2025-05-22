@@ -51,7 +51,29 @@ void Server::stop()
         return;
     }
 
-    // TODO: Implement server stop logic (close acceptor, sockets, stop io_context, join thread)
+    // 1. Acceptor 닫기 (더 이상 새로운 연결을 받지 않음)
+    if (acceptor) {
+        boost::system::error_code ec;
+        acceptor->close(ec);
+        // 오류 처리는 필요에 따라 추가
+    }
+
+    // 2. 모든 클라이언트 소켓 닫기 (TODO: 클라이언트 관리 맵 구현 후 추가)
+    // for (auto const& [clientId, socket] : clients) {
+    //     if (socket->is_open()) {
+    //         boost::system::error_code ec;
+    //         socket->close(ec);
+    //     }
+    // }
+    // clients.clear();
+
+    // 3. io_context 중지 (진행 중인 모든 비동기 작업 취소)
+    io_context.stop();
+
+    // 4. IO 스레드 종료 대기
+    if (io_thread.joinable()) {
+        io_thread.join();
+    }
 
     running_ = false;
     std::cout << "Server stopped." << std::endl;
