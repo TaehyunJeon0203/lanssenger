@@ -14,3 +14,5 @@ services:
     command: ./client
     depends_on:
       - server
+    tty: true # 터미널 할당
+    stdin_open: true # 표준 입력 열기
