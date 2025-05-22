@@ -2,7 +2,7 @@
 
 ## 1. 개발 환경 설정
 
-### 1.1 필수 도구 설치
+### 1.1 로컬 Qt Creator 설치
 
 ```bash
 # Ubuntu/Debian 기준
@@ -11,17 +11,103 @@ sudo apt-get install -y \
     qt6-base-dev \
     qt6-tools-dev \
     qt6-tools-dev-tools \
-    qtcreator \
-    git
+    qtcreator
 ```
 
-### 1.2 Qt Creator 설정
+### 1.2 Docker 환경 설정
 
-1. Qt Creator 실행
-2. Tools > Options > Kits에서 Qt 6 버전 선택
-3. Tools > Options > Build & Run에서 컴파일러 설정
+```bash
+# 1. 프로젝트 클론
+git clone [프로젝트_주소]
+cd lansseneger
 
-## 2. 프로젝트 구조
+# 2. 개발용 Docker 컨테이너 실행
+docker-compose up -d
+```
+
+### 1.3 로컬 Qt Creator 설정
+
+1. Qt Creator에서 프로젝트 열기
+
+   - File > Open File or Project > CMakeLists.txt 선택
+   - Kit 선택: Desktop Qt 6.x.x
+
+2. 빌드 설정
+
+   - Projects > Build Settings
+   - Build directory: `build`
+   - CMake configuration:
+     ```
+     -DCMAKE_PREFIX_PATH=/usr/lib/x86_64-linux-gnu/cmake
+     ```
+
+3. 실행 설정 (Docker에서 실행)
+   - Projects > Run Settings
+   - Run configuration: Custom Executable
+   - Executable: `docker exec -i lansseneger-client-1 /app/client`
+
+### 1.4 로컬 빌드 및 실행
+
+```bash
+# 빌드
+mkdir -p build && cd build
+cmake ..
+make
+
+# 실행
+./bin/client
+```
+
+## 2. 개발 워크플로우
+
+### 2.1 코드 작성
+
+1. 로컬 Qt Creator에서 코드 작성
+2. 코드 자동 완성, 문법 검사 등 IDE 기능 활용
+3. Qt Designer로 UI 디자인
+
+### 2.2 빌드 및 실행
+
+1. 로컬에서 빌드
+
+   ```bash
+   mkdir -p build && cd build
+   cmake ..
+   make
+   ```
+
+2. Docker 컨테이너에 실행 파일 복사
+
+   ```bash
+   docker cp build/bin/client lansseneger-client-1:/app/
+   ```
+
+3. Docker에서 실행
+   ```bash
+   docker exec -it lansseneger-client-1 /app/client
+   ```
+
+### 2.3 자동화 스크립트
+
+빌드와 실행을 자동화하는 스크립트를 만들어 사용할 수 있습니다:
+
+```bash
+#!/bin/bash
+# build_and_run.sh
+
+# 로컬 빌드
+mkdir -p build && cd build
+cmake ..
+make
+
+# Docker 컨테이너에 복사
+docker cp bin/client lansseneger-client-1:/app/
+
+# Docker에서 실행
+docker exec -it lansseneger-client-1 /app/client
+```
+
+## 3. 프로젝트 구조
 
 ```
 project/
@@ -35,37 +121,16 @@ project/
             └── mainwindow.cpp    # GUI 클래스 구현
 ```
 
-## 3. 주요 클래스 설명
-
-### 3.1 MainWindow 클래스
-
-```cpp
-class MainWindow : public QMainWindow {
-    // UI 컴포넌트
-    QTextEdit* chatDisplay;    // 채팅 메시지 표시
-    QLineEdit* messageInput;   // 메시지 입력
-    QPushButton* sendButton;   // 전송 버튼
-    QListWidget* userList;     // 사용자 목록
-    QLabel* statusLabel;       // 상태 표시
-};
-```
-
-### 3.2 주요 기능
-
-1. 메시지 전송/수신
-2. 사용자 목록 관리
-3. 연결 상태 표시
-
 ## 4. 개발 가이드
 
 ### 4.1 UI 수정
 
 1. Qt Designer 사용:
-   ```bash
-   # UI 파일 생성
-   qtcreator mainwindow.ui
-   ```
-2. 또는 코드로 직접 수정:
+
+   - 로컬 Qt Creator에서 UI 파일 생성/수정
+   - 시각적 디자인 도구 활용
+
+2. 코드로 직접 수정:
    ```cpp
    void MainWindow::setupUI() {
        // UI 컴포넌트 생성 및 배치
@@ -139,15 +204,40 @@ docker-compose up --build client
 
 ## 7. 협업 가이드
 
-1. Git 브랜치 관리:
+### 7.1 Git 브랜치 전략
 
-   - `feature/gui-xxx` 형식으로 브랜치 생성
-   - PR을 통한 코드 리뷰
+1. 메인 브랜치
 
-2. 코드 스타일:
-   - Qt 코딩 컨벤션 준수
-   - 일관된 들여쓰기 사용
-   - 적절한 주석 작성
+   - `main`: 안정적인 릴리스 버전
+   - `develop`: 개발 중인 버전
+
+2. 기능 브랜치
+   - `feature/gui-xxx`: GUI 기능 개발
+   - `feature/backend-xxx`: 백엔드 기능 개발
+
+### 7.2 코드 리뷰
+
+1. Pull Request 생성
+
+   - 기능 브랜치에서 develop 브랜치로 PR 생성
+   - 변경사항 설명 작성
+   - 리뷰어 지정
+
+2. 코드 리뷰 진행
+   - UI/UX 검토
+   - 코드 품질 검토
+   - 테스트 결과 확인
+
+### 7.3 테스트
+
+1. 로컬 테스트
+
+   - Qt Creator에서 UI 동작 테스트
+   - 단위 테스트 실행
+
+2. 통합 테스트
+   - Docker 환경에서 서버와 연동 테스트
+   - 실제 사용 시나리오 테스트
 
 ## 8. 주의사항
 
@@ -210,3 +300,52 @@ docker-compose up --build client
 3. 커뮤니티
    - [Qt Forum](https://forum.qt.io/)
    - [Stack Overflow Qt 태그](https://stackoverflow.com/questions/tagged/qt)
+
+## 12. 개발 팁
+
+### 12.1 로컬 개발 장점
+
+1. 빠른 코드 작성
+
+   - 자동 완성
+   - 문법 검사
+   - 리팩토링 도구
+
+2. 디버깅 용이
+
+   - 중단점 설정
+   - 변수 검사
+   - 호출 스택 확인
+
+3. UI 디자인 편의
+
+   - Qt Designer 실시간 미리보기
+   - 드래그 앤 드롭으로 UI 구성
+
+### 12.2 Docker 실행 장점
+
+1. 환경 일관성
+
+   - 모든 개발자가 동일한 환경
+   - 의존성 문제 해결
+
+2. 배포 용이
+
+   - 개발 환경과 동일한 실행 환경
+   - 컨테이너화된 애플리케이션
+
+### 12.3 자주 사용하는 명령어
+
+```bash
+# Docker 컨테이너 상태 확인
+docker ps
+
+# 로그 확인
+docker logs lansseneger-client-1
+
+# 컨테이너 재시작
+docker-compose restart client
+
+# 실행 파일 복사
+docker cp build/bin/client lansseneger-client-1:/app/
+```
