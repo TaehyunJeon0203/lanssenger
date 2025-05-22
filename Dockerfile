@@ -21,5 +21,9 @@ RUN mkdir -p build && cd build && cmake .. && cmake --build .
 RUN cp /app/build/bin/server /app/
 RUN cp /app/build/bin/client /app/
 
+# 실행 권한 부여
+RUN chmod +x /app/server
+RUN chmod +x /app/client
+
 # 기본 명령어 설정
 CMD ["/bin/bash"] 

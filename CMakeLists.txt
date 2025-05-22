@@ -14,6 +14,7 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 # 서버 실행 파일
 add_executable(server
     src/server/main.cpp
+    src/server/server.cpp
 )
 
 # 클라이언트 실행 파일

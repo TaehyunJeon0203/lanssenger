@@ -6,6 +6,8 @@ services:
     ports:
       - "8080:8080"
     command: ./server
+    tty: true # 터미널 할당
+    stdin_open: true # 표준 입력 열기
 
   client:
     build: .
