@@ -6,6 +6,9 @@ RUN apt-get update && apt-get install -y \
     cmake \
     git \
     libboost-all-dev \
+    qt6-base-dev \
+    qt6-tools-dev \
+    qt6-tools-dev-tools \
     && rm -rf /var/lib/apt/lists/*
 
 # 작업 디렉토리 설정

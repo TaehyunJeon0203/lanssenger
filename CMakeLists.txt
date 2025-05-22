@@ -1,12 +1,19 @@
-cmake_minimum_required(VERSION 3.16)
-project(lansseneger VERSION 1.0.0 LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.10)
+project(lansseneger)
 
 # C++17 표준 사용
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Boost 라이브러리 찾기
-find_package(Boost REQUIRED COMPONENTS system thread)
+find_package(Boost REQUIRED COMPONENTS system)
+include_directories(${Boost_INCLUDE_DIRS})
+
+# Qt 찾기
+find_package(Qt6 COMPONENTS Core Gui Widgets REQUIRED)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
 
 # 헤더 파일 디렉토리 추가
 include_directories(${CMAKE_SOURCE_DIR}/include)
@@ -17,21 +24,24 @@ add_executable(server
     src/server/server.cpp
 )
 
-# 클라이언트 실행 파일
+# 클라이언트 실행 파일 (GUI)
 add_executable(client
     src/client/main.cpp
+    src/client/gui/mainwindow.cpp
 )
 
-# Boost 라이브러리 링크
-target_link_libraries(server PRIVATE
-    Boost::system
-    Boost::thread
+# Qt 라이브러리 링크
+target_link_libraries(client
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Widgets
+    ${Boost_LIBRARIES}
 )
 
-target_link_libraries(client PRIVATE
-    Boost::system
-    Boost::thread
+# 서버에 Boost 라이브러리 링크
+target_link_libraries(server
+    ${Boost_LIBRARIES}
 )
 
 # 빌드 디렉토리 설정
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin) 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin) 
