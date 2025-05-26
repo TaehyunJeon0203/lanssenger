@@ -10,6 +10,9 @@
 #include <QListWidget>
 #include <memory>
 
+// ChatClient 클래스 전방 선언
+class ChatClient;
+
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
@@ -32,6 +35,10 @@ private:
     QListWidget* userList;
     QLabel* statusLabel;
 
+    // 네트워크 클라이언트
+    std::unique_ptr<ChatClient> chatClient;
+
     void setupUI();
     void setupConnections();
+    void connectToServer();
 }; 

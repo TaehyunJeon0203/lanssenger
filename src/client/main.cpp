@@ -3,9 +3,12 @@
 #include <thread>
 #include <boost/asio.hpp>
 #include <atomic>
+#include <functional>
 
 class ChatClient {
 public:
+    using MessageCallback = std::function<void(const std::string&)>;
+
     ChatClient() : socket_(io_context_), running_(false) {}
 
     bool connect(const std::string& host, unsigned short port) {
@@ -24,6 +27,10 @@ public:
         }
     }
 
+    void setMessageCallback(MessageCallback callback) {
+        message_callback_ = callback;
+    }
+
     void start() {
         // 서버로부터 메시지를 받는 스레드 시작
         receive_thread_ = std::thread([this]() {
@@ -34,7 +41,12 @@ public:
                     std::string message;
                     std::istream is(&buf);
                     std::getline(is, message);
-                    std::cout << message << std::endl;
+                    
+                    if (message_callback_) {
+                        message_callback_(message);
+                    } else {
+                        std::cout << message << std::endl;
+                    }
                 }
             } catch (const std::exception& e) {
                 if (running_) {
@@ -43,17 +55,18 @@ public:
             }
         });
 
-        // 사용자 입력을 처리하는 메인 스레드
-        std::string input;
-        while (running_) {
-            std::getline(std::cin, input);
-            if (input == "/quit") {
-                break;
+        // 콘솔 모드일 때만 사용자 입력을 처리
+        if (!message_callback_) {
+            std::string input;
+            while (running_) {
+                std::getline(std::cin, input);
+                if (input == "/quit") {
+                    break;
+                }
+                sendMessage(input);
             }
-            sendMessage(input);
+            stop();
         }
-
-        stop();
     }
 
     void stop() {
@@ -66,7 +79,6 @@ public:
         }
     }
 
-private:
     void sendMessage(const std::string& message) {
         try {
             boost::asio::write(socket_, boost::asio::buffer(message + "\n"));
@@ -76,12 +88,16 @@ private:
         }
     }
 
+private:
     boost::asio::io_context io_context_;
     boost::asio::ip::tcp::socket socket_;
     std::thread receive_thread_;
     std::atomic<bool> running_;
+    MessageCallback message_callback_;
 };
 
+// 콘솔 클라이언트용 main 함수
+#ifdef CONSOLE_CLIENT
 int main() {
     try {
         ChatClient client;
@@ -100,4 +116,5 @@ int main() {
     }
 
     return 0;
-} 
+}
+#endif 

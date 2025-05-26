@@ -44,6 +44,7 @@ if(NOT DEFINED BUILD_SERVER_ONLY)
         src/client/main.cpp
         src/client/nickname_manager.cpp
     )
+    target_compile_definitions(client PRIVATE CONSOLE_CLIENT)
 
     # GUI 클라이언트 실행 파일
     add_executable(client_gui
