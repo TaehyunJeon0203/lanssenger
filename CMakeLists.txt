@@ -29,12 +29,15 @@ add_executable(client
     src/client/main.cpp
     src/client/gui/mainwindow.cpp
     src/client/nickname_manager.cpp
+    src/client/chat_message.cpp
+    src/client/chat_manager.cpp
 )
 
-# 닉네임 관리 테스트 프로그램
-add_executable(test_nickname
-    src/client/test_nickname.cpp
-    src/client/nickname_manager.cpp
+# 채팅 테스트 프로그램
+add_executable(test_chat
+    src/client/test_chat.cpp
+    src/client/chat_message.cpp
+    src/client/chat_manager.cpp
 )
 
 # Qt 라이브러리 링크
