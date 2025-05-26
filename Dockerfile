@@ -21,8 +21,8 @@ COPY . .
 RUN mkdir -p build && cd build && cmake .. && cmake --build .
 
 # 빌드된 실행 파일 복사
-RUN cp /app/build/bin/server /app/
-RUN cp /app/build/bin/client /app/
+RUN cp /app/build/server /app/
+RUN cp /app/build/client /app/
 
 # 실행 권한 부여
 RUN chmod +x /app/server
