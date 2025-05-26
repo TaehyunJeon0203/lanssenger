@@ -10,7 +10,7 @@ std::string NicknameManager::getLocalIpAddress() {
     try {
         boost::asio::ip::udp::socket socket(io_context_);
         socket.connect(boost::asio::ip::udp::endpoint(
-            boost::asio::ip::address::from_string("8.8.8.8"), 53));
+            boost::asio::ip::make_address("8.8.8.8"), 53));
         return socket.local_endpoint().address().to_string();
     } catch (const std::exception& e) {
         return "127.0.0.1"; // 기본값으로 localhost 반환
@@ -21,7 +21,7 @@ std::string NicknameManager::getLocalIpAddress(const std::string& interface) {
     try {
         boost::asio::ip::udp::socket socket(io_context_);
         socket.connect(boost::asio::ip::udp::endpoint(
-            boost::asio::ip::address::from_string("8.8.8.8"), 53));
+            boost::asio::ip::make_address("8.8.8.8"), 53));
         return socket.local_endpoint().address().to_string();
     } catch (const std::exception& e) {
         return "127.0.0.1"; // 기본값으로 localhost 반환
