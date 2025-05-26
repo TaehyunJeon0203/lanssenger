@@ -44,7 +44,7 @@ docker-compose up -d
 3. 실행 설정 (Docker에서 실행)
    - Projects > Run Settings
    - Run configuration: Custom Executable
-   - Executable: `docker exec -i lansseneger-client-1 /app/client`
+   - Executable: `docker exec -i lanssenger-client-1 /app/client`
 
 ### 1.4 로컬 빌드 및 실행
 
@@ -79,12 +79,12 @@ make
 2. Docker 컨테이너에 실행 파일 복사
 
    ```bash
-   docker cp build/bin/client lansseneger-client-1:/app/
+   docker cp build/bin/client lanssenger-client-1:/app/
    ```
 
 3. Docker에서 실행
    ```bash
-   docker exec -it lansseneger-client-1 /app/client
+   docker exec -it lanssenger-client-1 /app/client
    ```
 
 ### 2.3 자동화 스크립트
@@ -101,10 +101,10 @@ cmake ..
 make
 
 # Docker 컨테이너에 복사
-docker cp bin/client lansseneger-client-1:/app/
+docker cp bin/client lanssenger-client-1:/app/
 
 # Docker에서 실행
-docker exec -it lansseneger-client-1 /app/client
+docker exec -it lanssenger-client-1 /app/client
 ```
 
 ## 3. 프로젝트 구조
@@ -341,11 +341,11 @@ docker-compose up --build client
 docker ps
 
 # 로그 확인
-docker logs lansseneger-client-1
+docker logs lanssenger-client-1
 
 # 컨테이너 재시작
 docker-compose restart client
 
 # 실행 파일 복사
-docker cp build/bin/client lansseneger-client-1:/app/
+docker cp build/bin/client lanssenger-client-1:/app/
 ```
