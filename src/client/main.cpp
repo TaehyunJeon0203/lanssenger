@@ -87,7 +87,7 @@ int main() {
         ChatClient client;
         
         // 서버 연결
-        if (!client.connect("server", 8080)) {
+        if (!client.connect("localhost", 8080)) {
             return 1;
         }
 

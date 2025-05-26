@@ -1,5 +1,6 @@
 #include "client/gui/mainwindow.hpp"
 #include <QMessageBox>
+#include <QStatusBar>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -47,7 +48,7 @@ void MainWindow::setupUI()
     statusBar()->addWidget(statusLabel);
     
     // 윈도우 설정
-    setWindowTitle("Lansseneger Chat");
+    setWindowTitle("Lanssenger Chat");
     resize(800, 600);
 }
 
