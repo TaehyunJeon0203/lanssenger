@@ -28,6 +28,13 @@ add_executable(server
 add_executable(client
     src/client/main.cpp
     src/client/gui/mainwindow.cpp
+    src/client/nickname_manager.cpp
+)
+
+# 닉네임 관리 테스트 프로그램
+add_executable(test_nickname
+    src/client/test_nickname.cpp
+    src/client/nickname_manager.cpp
 )
 
 # Qt 라이브러리 링크
