@@ -39,6 +39,11 @@ if(NOT DEFINED BUILD_SERVER_ONLY)
     # Qt6 라이브러리 찾기
     find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
 
+    # UI 파일
+    set(UI_FILES
+        src/client/gui/mainwindow.ui
+    )
+
     # 콘솔 클라이언트 실행 파일
     add_executable(client
         src/client/main.cpp
@@ -52,6 +57,7 @@ if(NOT DEFINED BUILD_SERVER_ONLY)
         src/client/nickname_manager.cpp
         src/client/gui/mainwindow.cpp
         include/client/gui/mainwindow.hpp
+        ${UI_FILES}
     )
 
     # 클라이언트 링크
