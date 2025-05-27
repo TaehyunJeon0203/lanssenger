@@ -1,66 +1,106 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>791</width>
+    <height>673</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Lanssenger Chat</string>
+   <string>Form</string>
   </property>
-  <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="mainLayout">
-    <item>
-     <layout class="QHBoxLayout" name="contentLayout">
-      <item>
-       <widget class="QTextEdit" name="chatDisplay">
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QListWidget" name="userList">
-        <property name="maximumWidth">
-         <number>200</number>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="inputLayout">
-      <item>
-       <widget class="QLineEdit" name="messageInput"/>
-      </item>
-      <item>
-       <widget class="QPushButton" name="sendButton">
-        <property name="text">
-         <string>전송</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QMenuBar" name="menuBar"/>
-  <widget class="QStatusBar" name="statusBar">
-   <property name="sizeGripEnabled">
-    <bool>false</bool>
+  <widget class="QTextEdit" name="myChat">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>600</y>
+     <width>591</width>
+     <height>51</height>
+    </rect>
    </property>
-   <widget class="QLabel" name="statusLabel">
-    <property name="text">
-     <string>연결 중...</string>
-    </property>
-   </widget>
+  </widget>
+  <widget class="QPushButton" name="goGroupChat">
+   <property name="geometry">
+    <rect>
+     <x>690</x>
+     <y>50</y>
+     <width>81</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>그룹채팅</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="callOption">
+   <property name="geometry">
+    <rect>
+     <x>690</x>
+     <y>0</y>
+     <width>81</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>설정</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="mainLogo">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>10</y>
+     <width>181</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>24</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>LANssenger</string>
+   </property>
+  </widget>
+  <widget class="QTextBrowser" name="currentChat">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>90</y>
+     <width>591</width>
+     <height>501</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="sendButton">
+   <property name="geometry">
+    <rect>
+     <x>600</x>
+     <y>600</y>
+     <width>75</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>전송</string>
+   </property>
+  </widget>
+  <widget class="QListView" name="userList">
+   <property name="geometry">
+    <rect>
+     <x>595</x>
+     <y>90</y>
+     <width>181</width>
+     <height>501</height>
+    </rect>
+   </property>
   </widget>
  </widget>
  <resources/>
  <connections/>
-</ui> 
+</ui>
