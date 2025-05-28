@@ -2,15 +2,28 @@ cmake_minimum_required(VERSION 3.10)
 
 # vcpkg 설정 추가
 if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-    set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
-        CACHE STRING "")
+    set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
 endif()
 
-project(lanssenger)
+project(lanssenger LANGUAGES CXX)  # CXX 명시
+
+if(WIN32)
+  set(THREADS_PREFER_PTHREAD_FLAG OFF)
+endif()
+
+find_package(Threads REQUIRED)
 
 # C++17 표준 사용
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# MSVC에서 Qt C++17 관련 오류 방지
+if(MSVC)
+  add_compile_options(/Zc:__cplusplus)
+endif()
+
+# Windows 타겟 버전 정의 (경고 방지용)
+add_compile_definitions(_WIN32_WINNT=0x0601)  # Windows 7 이상 타겟
 
 # Boost 설정
 set(Boost_USE_STATIC_LIBS OFF)
@@ -30,10 +43,10 @@ add_executable(server
     src/server/server.cpp
 )
 
-# 서버 링크
+# 서버 링크 - pthread 대신 Threads::Threads 사용
 target_link_libraries(server
     ${Boost_LIBRARIES}
-    pthread
+    Threads::Threads
 )
 
 # 클라이언트 관련 설정 (서버 빌드 시에는 건너뜀)
@@ -67,22 +80,22 @@ if(NOT DEFINED BUILD_SERVER_ONLY)
         ${UI_FILES}
     )
 
-    # 클라이언트 링크
+    # 클라이언트 링크 - pthread 대신 Threads::Threads 사용
     target_link_libraries(client
         ${Boost_LIBRARIES}
-        pthread
+        Threads::Threads
         Qt6::Core
         Qt6::Widgets
     )
 
-    # GUI 클라이언트 링크
+    # GUI 클라이언트 링크 - pthread 대신 Threads::Threads 사용
     target_link_libraries(client_gui
         ${Boost_LIBRARIES}
-        pthread
+        Threads::Threads
         Qt6::Core
         Qt6::Widgets
     )
 endif()
 
 # 빌드 디렉토리 설정
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}) 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
