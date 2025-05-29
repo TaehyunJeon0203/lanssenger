@@ -5,7 +5,7 @@ if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
 endif()
 
-project(lanssenger LANGUAGES CXX)  # CXX 명시
+project(lanssenger LANGUAGES CXX)
 
 if(WIN32)
   set(THREADS_PREFER_PTHREAD_FLAG OFF)
@@ -22,8 +22,8 @@ if(MSVC)
   add_compile_options(/Zc:__cplusplus)
 endif()
 
-# Windows 타겟 버전 정의 (경고 방지용)
-add_compile_definitions(_WIN32_WINNT=0x0601)  # Windows 7 이상 타겟
+# Windows 타겟 버전 정의
+add_compile_definitions(_WIN32_WINNT=0x0601)
 
 # Boost 설정
 set(Boost_USE_STATIC_LIBS OFF)
@@ -43,14 +43,14 @@ add_executable(server
     src/server/server.cpp
 )
 
-# 서버 링크 - pthread 대신 Threads::Threads 사용
 target_link_libraries(server
     ${Boost_LIBRARIES}
     Threads::Threads
 )
 
-# 클라이언트 관련 설정 (서버 빌드 시에는 건너뜀)
+# 클라이언트 관련 설정
 if(NOT DEFINED BUILD_SERVER_ONLY)
+
     # Qt6 설정
     set(CMAKE_AUTOMOC ON)
     set(CMAKE_AUTORCC ON)
@@ -59,9 +59,9 @@ if(NOT DEFINED BUILD_SERVER_ONLY)
     # Qt6 라이브러리 찾기
     find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
 
-    # UI 파일
+    # UI 파일 (Qt Designer에서 만든 .ui 파일)
     set(UI_FILES
-        src/client/gui/mainwindow.ui
+        ui/mainwindow.ui
     )
 
     # 콘솔 클라이언트 실행 파일
@@ -70,6 +70,13 @@ if(NOT DEFINED BUILD_SERVER_ONLY)
         src/client/nickname_manager.cpp
     )
     target_compile_definitions(client PRIVATE CONSOLE_CLIENT)
+
+    target_link_libraries(client
+        ${Boost_LIBRARIES}
+        Threads::Threads
+        Qt6::Core
+        Qt6::Widgets
+    )
 
     # GUI 클라이언트 실행 파일
     add_executable(client_gui
@@ -80,15 +87,6 @@ if(NOT DEFINED BUILD_SERVER_ONLY)
         ${UI_FILES}
     )
 
-    # 클라이언트 링크 - pthread 대신 Threads::Threads 사용
-    target_link_libraries(client
-        ${Boost_LIBRARIES}
-        Threads::Threads
-        Qt6::Core
-        Qt6::Widgets
-    )
-
-    # GUI 클라이언트 링크 - pthread 대신 Threads::Threads 사용
     target_link_libraries(client_gui
         ${Boost_LIBRARIES}
         Threads::Threads
@@ -97,5 +95,5 @@ if(NOT DEFINED BUILD_SERVER_ONLY)
     )
 endif()
 
-# 빌드 디렉토리 설정
+# 실행 파일 출력 디렉토리
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})

@@ -1,14 +1,11 @@
-#pragma once
+#ifndef MAINWINDOW_HPP
+#define MAINWINDOW_HPP
 
 #include <QMainWindow>
-#include <QLineEdit>
-#include <QTextEdit>
-#include <QPushButton>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QLabel>
-#include <QListWidget>
-#include <memory>
+
+QT_BEGIN_NAMESPACE
+namespace Ui { class MainWindow; }  // Qt Designer 클래스 이름에 맞게 수정
+QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -19,19 +16,9 @@ public:
 
 private slots:
     void sendMessage();
-    void appendMessage(const QString& message);
-    void updateUserList(const QStringList& users);
 
 private:
-    // UI 컴포넌트
-    QWidget* centralWidget;
-    QVBoxLayout* mainLayout;
-    QTextEdit* chatDisplay;
-    QLineEdit* messageInput;
-    QPushButton* sendButton;
-    QListWidget* userList;
-    QLabel* statusLabel;
+    Ui::MainWindow *ui;  // Ui 클래스 이름 일치해야 함
+};
 
-    void setupUI();
-    void setupConnections();
-}; 
+#endif // MAINWINDOW_HPP
