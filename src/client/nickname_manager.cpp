@@ -1,4 +1,4 @@
-#include "client/nickname_manager.hpp"
+git #include "client/nickname_manager.hpp"
 #include <sstream>
 #include <algorithm>
 #include <regex>
