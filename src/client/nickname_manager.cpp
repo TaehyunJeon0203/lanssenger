@@ -2,7 +2,13 @@
 #include <sstream>
 #include <algorithm>
 #include <regex>
+#include <iostream>
 #include <boost/asio.hpp>
+
+NicknameManager& NicknameManager::getInstance() {
+    static NicknameManager instance;
+    return instance;
+}
 
 NicknameManager::NicknameManager() {}
 
@@ -95,4 +101,40 @@ bool NicknameManager::validateNicknameFormat(const std::string& nickname) {
     // 닉네임 형식 검증: baseName.xxx (xxx는 3자리 숫자)
     std::regex nicknamePattern(R"(^[a-zA-Z가-힣]+\.\d{3}$)");
     return std::regex_match(nickname, nicknamePattern);
+}
+
+void NicknameManager::setCurrentUserNickname(const std::string& nickname) {
+    nicknameMutex_.lock();
+    currentUserNickname_ = nickname;
+    nicknameMutex_.unlock();
+}
+
+std::string NicknameManager::getCurrentUserNickname() const {
+    nicknameMutex_.lock();
+    std::string nickname = currentUserNickname_;
+    nicknameMutex_.unlock();
+    return nickname;
+}
+
+void NicknameManager::updateUserList(const std::vector<std::string>& users) {
+    nicknameMutex_.lock();
+    userList_ = users;
+    if (userListCallback_) {
+        userListCallback_(users);
+    }
+    nicknameMutex_.unlock();
+}
+
+std::vector<std::string> NicknameManager::getUserList() const {
+    nicknameMutex_.lock();
+    std::vector<std::string> users = userList_;
+    nicknameMutex_.unlock();
+    return users;
+}
+
+int NicknameManager::getUserCount() const {
+    nicknameMutex_.lock();
+    int count = userList_.size();
+    nicknameMutex_.unlock();
+    return count;
 } 
