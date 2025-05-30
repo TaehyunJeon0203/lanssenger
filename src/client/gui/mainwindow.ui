@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>388</width>
+    <width>596</width>
     <height>685</height>
    </rect>
   </property>
@@ -84,13 +84,23 @@
      <bool>true</bool>
     </property>
    </widget>
+   <widget class="QListWidget" name="userList">
+    <property name="geometry">
+     <rect>
+      <x>385</x>
+      <y>250</y>
+      <width>181</width>
+      <height>192</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>388</width>
+     <width>596</width>
      <height>33</height>
     </rect>
    </property>
