@@ -45,7 +45,7 @@ add_executable(server
 
 target_link_libraries(server
     ${Boost_LIBRARIES}
-    Threads::Threads
+    pthread
 )
 
 # 클라이언트 관련 설정
@@ -59,10 +59,14 @@ if(NOT DEFINED BUILD_SERVER_ONLY)
     # Qt6 라이브러리 찾기
     find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
 
-    # UI 파일 (Qt Designer에서 만든 .ui 파일)
+    # UI 파일
     set(UI_FILES
-        ui/mainwindow.ui
+        src/client/gui/mainwindow.ui
+        src/client/gui/nicknameSet.ui
     )
+
+    # UI 파일 출력 디렉토리 설정
+    set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_CURRENT_SOURCE_DIR}/src/client/gui)
 
     # 콘솔 클라이언트 실행 파일
     add_executable(client
@@ -71,25 +75,33 @@ if(NOT DEFINED BUILD_SERVER_ONLY)
     )
     target_compile_definitions(client PRIVATE CONSOLE_CLIENT)
 
-    target_link_libraries(client
-        ${Boost_LIBRARIES}
-        Threads::Threads
-        Qt6::Core
-        Qt6::Widgets
-    )
-
     # GUI 클라이언트 실행 파일
     add_executable(client_gui
         src/client/gui/main_gui.cpp
         src/client/nickname_manager.cpp
         src/client/gui/mainwindow.cpp
+        src/client/gui/nickname_widget.cpp
         include/client/gui/mainwindow.hpp
         ${UI_FILES}
     )
 
+    # UI 헤더 파일 디렉토리 추가
+    target_include_directories(client_gui PRIVATE
+        ${CMAKE_CURRENT_BINARY_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+    )
+
+    target_link_libraries(client
+        ${Boost_LIBRARIES}
+        pthread
+        Qt6::Core
+        Qt6::Widgets
+    )
+
+    # GUI 클라이언트 링크
     target_link_libraries(client_gui
         ${Boost_LIBRARIES}
-        Threads::Threads
+        pthread
         Qt6::Core
         Qt6::Widgets
     )
