@@ -1,6 +1,8 @@
 #include "server/server.hpp"
 #include <iostream>
 
+namespace lanssenger {
+
 Server::Server()
     : running_(false)
 {
@@ -101,9 +103,16 @@ void Server::handleNewConnection()
             
             std::cout << "New connection from " << clientId << std::endl;
             
+            // ActiveUsersManager에 사용자 추가
+            std::string ipAddress = new_socket->remote_endpoint().address().to_string();
+            ActiveUsersManager::getInstance().addUser(clientId, "User" + std::to_string(clients_.size() + 1), ipAddress);
+            
             // 클라이언트 맵에 추가
             clients_[clientId] = new_socket;
             std::cout << "Total connected clients: " << clients_.size() << std::endl;
+            
+            // 접속자 목록 브로드캐스트
+            broadcastActiveUsers();
             
             // 클라이언트로부터 데이터 읽기 시작
             startReading(new_socket, clientId);
@@ -159,6 +168,12 @@ void Server::handleClientDisconnection(const std::string& clientId)
     if (clients_.erase(clientId) > 0) {
         std::cout << "Client " << clientId << " disconnected" << std::endl;
         std::cout << "Remaining clients: " << clients_.size() << std::endl;
+        
+        // ActiveUsersManager에서 사용자 제거
+        ActiveUsersManager::getInstance().removeUser(clientId);
+        
+        // 접속자 목록 브로드캐스트
+        broadcastActiveUsers();
     }
 }
 
@@ -171,4 +186,30 @@ void Server::handleClientData(const std::string& clientId, const std::string& da
             boost::asio::write(*socket, boost::asio::buffer(message));
         }
     }
-} 
+}
+
+void Server::broadcastActiveUsers()
+{
+    auto activeUsers = ActiveUsersManager::getInstance().getAllActiveUsers();
+    std::string userList = "ACTIVE_USERS:";
+    
+    for (const auto& [userId, info] : activeUsers) {
+        userList += info.nickname + "(" + info.ipLastThree + "),";
+    }
+    
+    // 마지막 쉼표 제거
+    if (!userList.empty() && userList.back() == ',') {
+        userList.pop_back();
+    }
+    
+    userList += "\n";
+    
+    // 모든 클라이언트에게 접속자 목록 전송
+    for (const auto& [id, socket] : clients_) {
+        if (socket->is_open()) {
+            boost::asio::write(*socket, boost::asio::buffer(userList));
+        }
+    }
+}
+
+} // namespace lanssenger 

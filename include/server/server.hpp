@@ -7,6 +7,9 @@
 #include <unordered_map>
 #include <thread>
 #include <map>
+#include "common/active_users.hpp"
+
+namespace lanssenger {
 
 class Server {
 public:
@@ -35,4 +38,7 @@ private:
     void startReading(std::shared_ptr<boost::asio::ip::tcp::socket> socket, const std::string& clientId);
     void handleClientDisconnection(const std::string& clientId);
     void handleClientData(const std::string& clientId, const std::string& data);
-}; 
+    void broadcastActiveUsers();
+};
+
+} // namespace lanssenger 

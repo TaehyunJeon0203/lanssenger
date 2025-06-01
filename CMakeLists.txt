@@ -41,11 +41,15 @@ include_directories(${Boost_INCLUDE_DIRS})
 add_executable(server
     src/server/main.cpp
     src/server/server.cpp
+    src/common/active_users.cpp
 )
 
-# 서버 링크 - pthread 대신 Threads::Threads 사용
-target_link_libraries(server
-    ${Boost_LIBRARIES}
+target_include_directories(server PRIVATE
+    ${CMAKE_SOURCE_DIR}/include
+)
+
+target_link_libraries(server PRIVATE
+    Boost::system
     Threads::Threads
 )
 
@@ -78,6 +82,10 @@ if(NOT DEFINED BUILD_SERVER_ONLY)
         src/client/gui/mainwindow.cpp
         include/client/gui/mainwindow.hpp
         ${UI_FILES}
+    )
+
+    target_include_directories(client PRIVATE
+        ${CMAKE_SOURCE_DIR}/include
     )
 
     # 클라이언트 링크 - pthread 대신 Threads::Threads 사용

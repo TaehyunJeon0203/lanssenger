@@ -4,6 +4,8 @@
 #include <thread>
 #include <chrono>
 
+using namespace lanssenger;
+
 Server* server_ptr = nullptr;
 
 void signalHandler(int signum) {
