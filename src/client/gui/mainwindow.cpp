@@ -28,11 +28,14 @@ void MainWindow::setupConnections()
 {
     connect(ui->sendButton, &QPushButton::clicked, this, &MainWindow::sendMessage);
     connect(ui->messageInput, &QLineEdit::returnPressed, this, &MainWindow::sendMessage);
+    connect(ui->userListButton, &QPushButton::clicked, this, &MainWindow::requestUserList);
+
+    // 그룹채팅 기능은 잠시 제외
+    // connect(ui->groupChatButton, &QPushButton::clicked, this, &MainWindow::showGroupChat);
 }
 
 void MainWindow::connectToServer()
 {
-    // 닉네임 입력 받기
     bool ok;
     QString nickname = QInputDialog::getText(this, "닉네임 입력",
                                            "사용할 닉네임을 입력하세요:",
@@ -44,7 +47,6 @@ void MainWindow::connectToServer()
         return;
     }
 
-    // ChatClient 생성 및 서버 연결
     chatClient = std::make_unique<ChatClient>();
     if (!chatClient->connect("localhost", 8080)) {
         QMessageBox::critical(this, "연결 오류",
@@ -53,14 +55,16 @@ void MainWindow::connectToServer()
         return;
     }
 
-    // 메시지 수신 시 UI 업데이트
     chatClient->setMessageCallback([this](const std::string& message) {
         appendMessage(QString::fromStdString(message));
     });
 
-    // 수신 스레드 시작
     chatClient->start();
     ui->statusLabel->setText("연결됨");
+
+    // 서버에 닉네임 전송
+    std::cout << "[MainWindow] 닉네임 전송 요청: " << nickname.toStdString() << std::endl;
+    chatClient->sendMessage("/nickname " + nickname.toStdString());
 }
 
 void MainWindow::sendMessage()
@@ -74,11 +78,37 @@ void MainWindow::sendMessage()
 
 void MainWindow::appendMessage(const QString& message)
 {
-    ui->chatDisplay->append(message);
+    if (message.startsWith("USER_LIST:")) {
+        QStringList users = message.mid(QString("USER_LIST:").length()).split(",", Qt::SkipEmptyParts);
+        
+        if (!userListWindow) {
+            userListWindow = std::make_unique<UserListWindow>(this);
+        }
+        userListWindow->updateUserList(users);
+        userListWindow->show();
+        userListWindow->raise();
+        userListWindow->activateWindow();
+    } else {
+        ui->chatDisplay->append(message);
+    }
 }
 
-void MainWindow::updateUserList(const QStringList& users)
+void MainWindow::requestUserList()
 {
-    ui->userList->clear();
-    ui->userList->addItems(users);
-} 
+    if (chatClient) {
+        chatClient->sendMessage("/users");
+    }
+}
+
+// 그룹채팅 관련 코드 주석처리 (추후 필요 시 복원)
+/*
+void MainWindow::showGroupChat()
+{
+    ui->stackedWidget->setCurrentWidget(ui->groupChatWidget);
+}
+
+void MainWindow::showMainChat()
+{
+    ui->stackedWidget->setCurrentWidget(ui->mainChatWidget);
+}
+*/

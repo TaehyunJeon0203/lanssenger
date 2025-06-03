@@ -179,11 +179,44 @@ void Server::handleClientDisconnection(const std::string& clientId)
 
 void Server::handleClientData(const std::string& clientId, const std::string& data)
 {
-    // 수신된 데이터를 모든 클라이언트에게 브로드캐스트
-    std::string message = "[" + clientId + "] " + data;
-    for (const auto& [id, socket] : clients_) {
-        if (socket->is_open()) {
-            boost::asio::write(*socket, boost::asio::buffer(message));
+    
+    std::string trimmedData = data;
+    trimmedData.erase(trimmedData.find_last_not_of("\r\n") + 1);
+        // 클라이언트로부터 수신된 데이터 처리
+    if (trimmedData == "/users") {
+        std::cout << "[서버] /users 요청 처리 중!" << std::endl;
+        auto activeUsers = ActiveUsersManager::getInstance().getAllActiveUsers();
+        std::string userList = "USER_LIST:";
+        for (const auto& [id, info] : activeUsers) {
+            userList += info.nickname + "(" + info.ipLastThree + "),";
+        }
+        if (!userList.empty() && userList.back() == ',') {
+            userList.pop_back();
+        }
+        userList += "\n";
+
+        auto socket = clients_[clientId];
+        if (socket && socket->is_open()) {
+            boost::asio::write(*socket, boost::asio::buffer(userList));
+        }
+        // 수신된 데이터를 모든 클라이언트에게 브로드캐스트
+    } else if (trimmedData.starts_with("/nickname ")) {
+        std::string nickname = trimmedData.substr(10);
+        std::cout << "[서버] 닉네임 설정 요청: " << nickname << std::endl;
+
+        auto& manager = ActiveUsersManager::getInstance();
+        auto users = manager.getAllActiveUsers();
+        auto it = users.find(clientId);
+        if (it != users.end()) {
+            it->second.nickname = nickname;
+        }
+
+    }else {
+        std::string message = "[" + clientId + "] " + data;
+        for (const auto& [id, socket] : clients_) {
+            if (socket->is_open()) {
+                boost::asio::write(*socket, boost::asio::buffer(message));
+            }
         }
     }
 }

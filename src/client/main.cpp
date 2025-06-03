@@ -81,6 +81,7 @@ public:
 
     void sendMessage(const std::string& message) {
         try {
+            std::cout << "[클라이언트] sendMessage 호출됨: " << message << std::endl;  // 추가
             boost::asio::write(socket_, boost::asio::buffer(message + "\n"));
         } catch (const std::exception& e) {
             std::cerr << "전송 오류: " << e.what() << std::endl;

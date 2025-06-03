@@ -80,7 +80,9 @@ if(NOT DEFINED BUILD_SERVER_ONLY)
         src/client/gui/main_gui.cpp
         src/client/nickname_manager.cpp
         src/client/gui/mainwindow.cpp
+        src/client/gui/userlistwindow.cpp
         include/client/gui/mainwindow.hpp
+        include/client/gui/userlistwindow.hpp
         ${UI_FILES}
     )
 
