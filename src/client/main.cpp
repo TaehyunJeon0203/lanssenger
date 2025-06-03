@@ -32,6 +32,10 @@ public:
     }
 
     void start() {
+        // io_context 실행 스레드 추가
+        io_thread_ = std::thread([this]() {
+            io_context_.run();
+        });
         // 서버로부터 메시지를 받는 스레드 시작
         receive_thread_ = std::thread([this]() {
             try {
@@ -66,11 +70,22 @@ public:
                 sendMessage(input);
             }
             stop();
+        } else {
+            // GUI 모드일 때는 종료 방지: 메인 스레드 종료 안 되게 유지
+            // 메시지 콜백이 있는 경우 GUI 루프가 메인 루프를 유지해주므로
+            // 여기서는 receive_thread_만 백그라운드로 유지되면 OK
+            // 추가적인 sleep 루프를 통해 메인 스레드가 빠르게 종료되지 않게 함
+            std::thread([this]() {
+                while (running_) {
+                    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                }
+            }).detach();
         }
     }
 
     void stop() {
         running_ = false;
+        io_context_.stop(); // io_context 중지 요청
         if (receive_thread_.joinable()) {
             receive_thread_.join();
         }
@@ -81,7 +96,7 @@ public:
 
     void sendMessage(const std::string& message) {
         try {
-            std::cout << "[클라이언트] sendMessage 호출됨: " << message << std::endl;  // 추가
+            std::cout << "[클라이언트] sendMessage 호출됨: " << message << std::endl;  // 로그 출력
             boost::asio::write(socket_, boost::asio::buffer(message + "\n"));
         } catch (const std::exception& e) {
             std::cerr << "전송 오류: " << e.what() << std::endl;
@@ -93,6 +108,7 @@ private:
     boost::asio::io_context io_context_;
     boost::asio::ip::tcp::socket socket_;
     std::thread receive_thread_;
+    std::thread io_thread_; 
     std::atomic<bool> running_;
     MessageCallback message_callback_;
 };
@@ -118,4 +134,4 @@ int main() {
 
     return 0;
 }
-#endif 
+#endif

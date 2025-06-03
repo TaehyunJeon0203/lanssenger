@@ -183,6 +183,8 @@ void Server::handleClientData(const std::string& clientId, const std::string& da
     std::string trimmedData = data;
     trimmedData.erase(trimmedData.find_last_not_of("\r\n") + 1);
         // 클라이언트로부터 수신된 데이터 처리
+    std::cout << "[서버] 받은 데이터: [" << trimmedData << "]" << std::endl;
+    
     if (trimmedData == "/users") {
         std::cout << "[서버] /users 요청 처리 중!" << std::endl;
         auto activeUsers = ActiveUsersManager::getInstance().getAllActiveUsers();
@@ -205,11 +207,8 @@ void Server::handleClientData(const std::string& clientId, const std::string& da
         std::cout << "[서버] 닉네임 설정 요청: " << nickname << std::endl;
 
         auto& manager = ActiveUsersManager::getInstance();
-        auto users = manager.getAllActiveUsers();
-        auto it = users.find(clientId);
-        if (it != users.end()) {
-            it->second.nickname = nickname;
-        }
+        manager.updateNickname(clientId, nickname);
+
 
     }else {
         std::string message = "[" + clientId + "] " + data;

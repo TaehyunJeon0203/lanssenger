@@ -39,4 +39,10 @@ bool ActiveUsersManager::isUserActive(const std::string& userId) const {
     return activeUsers_.find(userId) != activeUsers_.end();
 }
 
+void ActiveUsersManager::updateNickname(const std::string& userId, const std::string& nickname) {
+    std::lock_guard<std::mutex> lock(mutex_);
+    if (activeUsers_.find(userId) != activeUsers_.end()) {
+        activeUsers_[userId].nickname = nickname;
+    }
+}
 } // namespace lanssenger 
