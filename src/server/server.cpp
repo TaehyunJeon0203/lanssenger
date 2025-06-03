@@ -189,33 +189,65 @@ void Server::handleClientData(const std::string& clientId, const std::string& da
 
         auto socket = clients_[clientId];
         if (socket && socket->is_open()) {
-            auto activeUsers = ActiveUsersManager::getInstance().getAllActiveUsers();
-            std::string userList = "USER_LIST:";
+            try {
+                auto activeUsers = ActiveUsersManager::getInstance().getAllActiveUsers();
+                std::string userList = "USER_LIST:";
 
-            for (const auto& [id, info] : activeUsers) {
-                userList += info.nickname + "(" + info.ipLastThree + "),";
-            }
-            if (!userList.empty() && userList.back() == ',') {
-                userList.pop_back();
-            }
-            userList += "\n";
+                for (const auto& [id, info] : activeUsers) {
+                    userList += info.nickname + "(" + info.ipLastThree + "),";
+                }
+                if (!userList.empty() && userList.back() == ',') {
+                    userList.pop_back();
+                }
+                userList += "\n";
 
-            boost::asio::write(*socket, boost::asio::buffer(userList));
-            std::cout << "[서버] 유저 목록 전송: " << userList << std::endl;
+                std::cout << "[서버] 유저 목록 전송: [" << userList << "]" << std::endl;
+                
+                boost::system::error_code ec;
+                size_t written = boost::asio::write(*socket, boost::asio::buffer(userList), ec);
+                
+                if (ec) {
+                    std::cerr << "[서버] 유저 목록 전송 실패: " << ec.message() << std::endl;
+                    handleClientDisconnection(clientId);
+                    return;
+                }
+                
+                std::cout << "[서버] 유저 목록 전송 완료: " << written << " bytes" << std::endl;
+            } catch (const std::exception& e) {
+                std::cerr << "[서버] 유저 목록 전송 중 오류: " << e.what() << std::endl;
+                handleClientDisconnection(clientId);
+                return;
+            }
         }
     }
-    else if (trimmedData.starts_with("/nickname ")) {
+    else if (trimmedData.find("/nickname ") == 0) {
         std::string nickname = trimmedData.substr(10);
         std::cout << "[서버] 닉네임 설정 요청: " << nickname << std::endl;
 
         auto& manager = ActiveUsersManager::getInstance();
         manager.updateNickname(clientId, nickname);
+        
+        // 닉네임 변경 후 유저 목록 브로드캐스트
+        broadcastActiveUsers();
     }
     else {
         std::string message = "[" + clientId + "] " + data;
         for (const auto& [id, socket] : clients_) {
-            if (socket->is_open()) {
-                boost::asio::write(*socket, boost::asio::buffer(message));
+            if (socket && socket->is_open()) {
+                try {
+                    boost::system::error_code ec;
+                    size_t written = boost::asio::write(*socket, boost::asio::buffer(message), ec);
+                    
+                    if (ec) {
+                        std::cerr << "[서버] 메시지 전송 실패: " << ec.message() << std::endl;
+                        handleClientDisconnection(id);
+                    } else {
+                        std::cout << "[서버] 메시지 전송 완료: " << written << " bytes" << std::endl;
+                    }
+                } catch (const std::exception& e) {
+                    std::cerr << "[서버] 메시지 전송 중 오류: " << e.what() << std::endl;
+                    handleClientDisconnection(id);
+                }
             }
         }
     }
@@ -224,23 +256,36 @@ void Server::handleClientData(const std::string& clientId, const std::string& da
 void Server::broadcastActiveUsers()
 {
     auto activeUsers = ActiveUsersManager::getInstance().getAllActiveUsers();
-    std::string userList = "ACTIVE_USERS:";
+    std::string userList = "USER_LIST:";
     
     for (const auto& [userId, info] : activeUsers) {
         userList += info.nickname + "(" + info.ipLastThree + "),";
     }
     
-    // 마지막 쉼표 제거
     if (!userList.empty() && userList.back() == ',') {
         userList.pop_back();
     }
     
     userList += "\n";
     
-    // 모든 클라이언트에게 접속자 목록 전송
+    std::cout << "[서버] 브로드캐스트 유저 목록: [" << userList << "]" << std::endl;
+    
     for (const auto& [id, socket] : clients_) {
-        if (socket->is_open()) {
-            boost::asio::write(*socket, boost::asio::buffer(userList));
+        if (socket && socket->is_open()) {
+            try {
+                boost::system::error_code ec;
+                size_t written = boost::asio::write(*socket, boost::asio::buffer(userList), ec);
+                
+                if (ec) {
+                    std::cerr << "[서버] 브로드캐스트 실패: " << ec.message() << std::endl;
+                    handleClientDisconnection(id);
+                } else {
+                    std::cout << "[서버] 브로드캐스트 완료: " << written << " bytes" << std::endl;
+                }
+            } catch (const std::exception& e) {
+                std::cerr << "[서버] 브로드캐스트 중 오류: " << e.what() << std::endl;
+                handleClientDisconnection(id);
+            }
         }
     }
 }

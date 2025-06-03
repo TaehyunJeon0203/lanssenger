@@ -1,4 +1,5 @@
 #pragma once
+
 #include <QWidget>
 #include <QListWidget>
 
@@ -7,6 +8,7 @@ class UserListWindow : public QWidget {
 public:
     explicit UserListWindow(QWidget *parent = nullptr);
     void updateUserList(const QStringList& users);
+
 private:
-    QListWidget *userListWidget;
+    QListWidget* userListWidget;
 };

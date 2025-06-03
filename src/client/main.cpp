@@ -34,47 +34,63 @@ public:
     void start() {
         // io_context 실행 스레드 추가
         io_thread_ = std::thread([this]() {
-            io_context_.run();
+            try {
+                io_context_.run();
+            } catch (const std::exception& e) {
+                std::cerr << "IO Context 오류: " << e.what() << std::endl;
+            }
         });
+
         // 서버로부터 메시지를 받는 스레드 시작
         receive_thread_ = std::thread([this]() {
             try {
                 while (running_) {
                     boost::asio::streambuf buf;
-                    boost::asio::read_until(socket_, buf, '\n');
-                    std::string message;
-                    std::istream is(&buf);
-                    std::getline(is, message);
+                    boost::system::error_code ec;
                     
-                    if (message_callback_) {
-                        message_callback_(message);
-                    } else {
-                        std::cout << message << std::endl;
+                    // 비동기 읽기 대신 동기 읽기 사용
+                    size_t len = boost::asio::read_until(socket_, buf, '\n', ec);
+                    
+                    if (ec) {
+                        if (ec == boost::asio::error::eof) {
+                            std::cout << "서버와의 연결이 종료되었습니다." << std::endl;
+                        } else {
+                            std::cerr << "수신 오류: " << ec.message() << std::endl;
+                        }
+                        if (running_) {
+                            // 재연결 시도
+                            std::this_thread::sleep_for(std::chrono::seconds(1));
+                            continue;
+                        }
+                        break;
+                    }
+
+                    if (len > 0) {
+                        std::string message;
+                        std::istream is(&buf);
+                        std::getline(is, message);
+                        
+                        if (!message.empty()) {
+                            std::cout << "[클라이언트] 받은 메시지: [" << message << "]" << std::endl;
+                            if (message_callback_) {
+                                try {
+                                    message_callback_(message);
+                                } catch (const std::exception& e) {
+                                    std::cerr << "메시지 콜백 처리 오류: " << e.what() << std::endl;
+                                }
+                            }
+                        }
                     }
                 }
             } catch (const std::exception& e) {
                 if (running_) {
-                    std::cerr << "수신 오류: " << e.what() << std::endl;
+                    std::cerr << "수신 스레드 오류: " << e.what() << std::endl;
                 }
             }
         });
 
-        // 콘솔 모드일 때만 사용자 입력을 처리
-        if (!message_callback_) {
-            std::string input;
-            while (running_) {
-                std::getline(std::cin, input);
-                if (input == "/quit") {
-                    break;
-                }
-                sendMessage(input);
-            }
-            stop();
-        } else {
-            // GUI 모드일 때는 종료 방지: 메인 스레드 종료 안 되게 유지
-            // 메시지 콜백이 있는 경우 GUI 루프가 메인 루프를 유지해주므로
-            // 여기서는 receive_thread_만 백그라운드로 유지되면 OK
-            // 추가적인 sleep 루프를 통해 메인 스레드가 빠르게 종료되지 않게 함
+        // GUI 모드일 때는 종료 방지
+        if (message_callback_) {
             std::thread([this]() {
                 while (running_) {
                     std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -96,10 +112,22 @@ public:
 
     void sendMessage(const std::string& message) {
         try {
-            std::cout << "[클라이언트] sendMessage 호출됨: " << message << std::endl;  // 로그 출력
-            boost::asio::write(socket_, boost::asio::buffer(message + "\n"));
+            if (!socket_.is_open()) {
+                std::cerr << "소켓이 닫혀있습니다." << std::endl;
+                return;
+            }
+
+            std::cout << "[클라이언트] sendMessage 호출됨: [" << message << "]" << std::endl;
+            
+            boost::system::error_code ec;
+            boost::asio::write(socket_, boost::asio::buffer(message + "\n"), ec);
+            
+            if (ec) {
+                std::cerr << "전송 오류: " << ec.message() << std::endl;
+                stop();
+            }
         } catch (const std::exception& e) {
-            std::cerr << "전송 오류: " << e.what() << std::endl;
+            std::cerr << "전송 예외 발생: " << e.what() << std::endl;
             stop();
         }
     }

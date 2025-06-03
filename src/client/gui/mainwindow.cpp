@@ -78,19 +78,30 @@ void MainWindow::sendMessage()
 
 void MainWindow::appendMessage(const QString& message)
 {
-    if (message.startsWith("USER_LIST:")) {
-        QStringList users = message.mid(QString("USER_LIST:").length()).split(",", Qt::SkipEmptyParts);
-        
-        if (!userListWindow) {
-            userListWindow = std::make_unique<UserListWindow>(this);
+    std::cout << "[MainWindow] 받은 메시지: " << message.toStdString() << std::endl;
+    
+    // GUI 업데이트는 메인 스레드에서 실행
+    QMetaObject::invokeMethod(this, [this, message]() {
+        if (message.startsWith("USER_LIST:")) {
+            std::cout << "[MainWindow] 유저 목록 메시지 감지됨" << std::endl;
+            QString userListStr = message.mid(QString("USER_LIST:").length());
+            QStringList users = userListStr.split(",", Qt::SkipEmptyParts);
+            
+            std::cout << "[MainWindow] 파싱된 유저 목록: " << users.join(", ").toStdString() << std::endl;
+            
+            if (!userListWindow) {
+                std::cout << "[MainWindow] 새로운 UserListWindow 생성" << std::endl;
+                userListWindow = std::make_unique<UserListWindow>(this);
+            }
+            
+            userListWindow->updateUserList(users);
+            userListWindow->show();
+            userListWindow->raise();
+            userListWindow->activateWindow();
+        } else {
+            ui->chatDisplay->append(message);
         }
-        userListWindow->updateUserList(users);
-        userListWindow->show();
-        userListWindow->raise();
-        userListWindow->activateWindow();
-    } else {
-        ui->chatDisplay->append(message);
-    }
+    }, Qt::QueuedConnection);
 }
 
 void MainWindow::requestUserList()
