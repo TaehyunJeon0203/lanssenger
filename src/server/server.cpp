@@ -179,38 +179,39 @@ void Server::handleClientDisconnection(const std::string& clientId)
 
 void Server::handleClientData(const std::string& clientId, const std::string& data)
 {
-    
     std::string trimmedData = data;
     trimmedData.erase(trimmedData.find_last_not_of("\r\n") + 1);
-        // 클라이언트로부터 수신된 데이터 처리
+
     std::cout << "[서버] 받은 데이터: [" << trimmedData << "]" << std::endl;
-    
+
     if (trimmedData == "/users") {
         std::cout << "[서버] /users 요청 처리 중!" << std::endl;
-        auto activeUsers = ActiveUsersManager::getInstance().getAllActiveUsers();
-        std::string userList = "USER_LIST:";
-        for (const auto& [id, info] : activeUsers) {
-            userList += info.nickname + "(" + info.ipLastThree + "),";
-        }
-        if (!userList.empty() && userList.back() == ',') {
-            userList.pop_back();
-        }
-        userList += "\n";
 
         auto socket = clients_[clientId];
         if (socket && socket->is_open()) {
+            auto activeUsers = ActiveUsersManager::getInstance().getAllActiveUsers();
+            std::string userList = "USER_LIST:";
+
+            for (const auto& [id, info] : activeUsers) {
+                userList += info.nickname + "(" + info.ipLastThree + "),";
+            }
+            if (!userList.empty() && userList.back() == ',') {
+                userList.pop_back();
+            }
+            userList += "\n";
+
             boost::asio::write(*socket, boost::asio::buffer(userList));
+            std::cout << "[서버] 유저 목록 전송: " << userList << std::endl;
         }
-        // 수신된 데이터를 모든 클라이언트에게 브로드캐스트
-    } else if (trimmedData.starts_with("/nickname ")) {
+    }
+    else if (trimmedData.starts_with("/nickname ")) {
         std::string nickname = trimmedData.substr(10);
         std::cout << "[서버] 닉네임 설정 요청: " << nickname << std::endl;
 
         auto& manager = ActiveUsersManager::getInstance();
         manager.updateNickname(clientId, nickname);
-
-
-    }else {
+    }
+    else {
         std::string message = "[" + clientId + "] " + data;
         for (const auto& [id, socket] : clients_) {
             if (socket->is_open()) {
