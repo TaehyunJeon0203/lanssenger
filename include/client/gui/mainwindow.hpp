@@ -21,6 +21,7 @@ private slots:
 
 private:
     void setupConnections();
+    void setupMenuBar();
     void connectToServer();
     void appendMessage(const QString& message);
 

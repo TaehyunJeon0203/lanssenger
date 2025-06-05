@@ -3,6 +3,8 @@
 #include <QMessageBox>
 #include <QStatusBar>
 #include <QInputDialog>
+#include <QMenuBar>
+#include <QMenu>
 
 // ChatClient 클래스 정의를 포함
 #include "../main.cpp"
@@ -12,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setupMenuBar();
     setupConnections();
     connectToServer();
 }
@@ -24,11 +27,30 @@ MainWindow::~MainWindow()
     }
 }
 
+void MainWindow::setupMenuBar()
+{
+    // 메뉴바 생성
+    QMenuBar* menuBar = new QMenuBar(this);
+    setMenuBar(menuBar);
+
+    // 채팅방 목록 메뉴
+    QMenu* roomMenu = menuBar->addMenu(tr("채팅방"));
+    QAction* roomListAction = roomMenu->addAction(tr("채팅방 목록"));
+    connect(roomListAction, &QAction::triggered, this, [this]() {
+        // TODO: 채팅방 목록 표시 기능 구현
+    });
+
+    // 유저 목록 메뉴
+    QMenu* userMenu = menuBar->addMenu(tr("유저"));
+    QAction* userListAction = userMenu->addAction(tr("유저 목록"));
+    connect(userListAction, &QAction::triggered, this, &MainWindow::requestUserList);
+}
+
 void MainWindow::setupConnections()
 {
     connect(ui->sendButton, &QPushButton::clicked, this, &MainWindow::sendMessage);
     connect(ui->messageInput, &QLineEdit::returnPressed, this, &MainWindow::sendMessage);
-    connect(ui->userListMenu, &QMenu::clicked, this, &MainWindow::requestUserList);
+    connect(ui->userListButton, &QPushButton::clicked, this, &MainWindow::requestUserList);
 
     // 그룹채팅 기능은 잠시 제외
     // connect(ui->groupChatButton, &QPushButton::clicked, this, &MainWindow::showGroupChat);
