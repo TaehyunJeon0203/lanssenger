@@ -86,31 +86,31 @@
      </rect>
     </property>
    </widget>
-   <widget class="QStackedWidget" name="stackedWidget">
-    <property name="geometry">
-     <rect>
-      <x>70</x>
-      <y>20</y>
-      <width>120</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="currentIndex">
-     <number>0</number>
-    </property>
-    <widget class="QWidget" name="mainChatWidget"/>
-    <widget class="QWidget" name="groupChatWidget"/>
-   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
      <width>391</width>
-     <height>22</height>
+     <height>33</height>
     </rect>
    </property>
+   <widget class="QMenu" name="groupChatMenu">
+    <property name="title">
+     <string>그룹채팅</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="userListMenu">
+    <property name="title">
+     <string>유저목록</string>
+    </property>
+   </widget>
+   <addaction name="groupChatMenu"/>
+   <addaction name="userListMenu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

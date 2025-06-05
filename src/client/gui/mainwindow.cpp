@@ -28,7 +28,7 @@ void MainWindow::setupConnections()
 {
     connect(ui->sendButton, &QPushButton::clicked, this, &MainWindow::sendMessage);
     connect(ui->messageInput, &QLineEdit::returnPressed, this, &MainWindow::sendMessage);
-    connect(ui->userListMenu, &QMenu::aboutToShow, this, &MainWindow::requestUserList);
+    connect(ui->userListMenu, &QMenu::clicked, this, &MainWindow::requestUserList);
 
     // 그룹채팅 기능은 잠시 제외
     // connect(ui->groupChatButton, &QPushButton::clicked, this, &MainWindow::showGroupChat);
