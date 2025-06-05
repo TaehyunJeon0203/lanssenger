@@ -6,7 +6,13 @@
 
 UserListWindow::UserListWindow(QWidget *parent) : QWidget(parent), ui(new Ui::UserListWindow) {
     ui->setupUi(this);
-    setWindowFlags(windowFlags() | Qt::WindowCloseButtonHint);
+    setWindowFlags(Qt::Window | Qt::WindowCloseButtonHint);
+    
+    // 메인 윈도우가 있다면 그 위치를 기준으로 설정
+    if (parent) {
+        QPoint parentPos = parent->mapToGlobal(parent->rect().topRight());
+        move(parentPos.x() + 10, parentPos.y()); // 메인 윈도우 오른쪽에 10픽셀 간격으로 배치
+    }
     
     connect(ui->closeButton, &QPushButton::clicked, this, &QWidget::close);
 }
