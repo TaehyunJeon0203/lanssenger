@@ -9,10 +9,8 @@ UserListWindow::UserListWindow(QWidget *parent) : QWidget(parent) {
     userListWidget = new QListWidget(this);
     layout->addWidget(userListWidget);
 
-
-    QPushButton *closeButton = new QPushButton("닫기", this);
-    layout->addWidget(closeButton);
-    connect(closeButton, &QPushButton::clicked, this, &QWidget::close);
+    // 닫기 버튼 제거 (우측 상단 X 버튼만 사용)
+    setWindowFlags(windowFlags() | Qt::WindowCloseButtonHint);
 }
 
 void UserListWindow::updateUserList(const QStringList& users) {
