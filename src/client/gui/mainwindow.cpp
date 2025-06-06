@@ -1,68 +1,54 @@
 #include "client/gui/mainwindow.hpp"
 #include "ui_mainwindow.h"
 #include <QMessageBox>
-#include <QStatusBar>
 #include <QInputDialog>
 #include <QMenuBar>
 #include <QMenu>
-
-// ChatClient 클래스 정의를 포함
+#include <QDebug>
+#include "client/gui/userlistwindow.hpp"
 #include "../main.cpp"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
-{
+    : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
     setupMenuBar();
     setupConnections();
     connectToServer();
 }
 
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow() {
     delete ui;
     if (chatClient) {
         chatClient->stop();
     }
 }
 
-void MainWindow::setupMenuBar()
-{
-    // 메뉴바 생성
+void MainWindow::setupMenuBar() {
     QMenuBar* menuBar = new QMenuBar(this);
     setMenuBar(menuBar);
 
-    // 채팅방 목록 메뉴
     QMenu* roomMenu = menuBar->addMenu(tr("채팅방"));
-    QAction* roomListAction = roomMenu->addAction(tr("채팅방 목록"));
-    connect(roomListAction, &QAction::triggered, this, [this]() {
-        // TODO: 채팅방 목록 표시 기능 구현
-    });
+    QAction* roomListAction = roomMenu->addAction(tr("그룹채팅 열기"));
+    connect(roomListAction, &QAction::triggered, this, &MainWindow::showGroupChat);
 
-    // 유저 목록 메뉴
     QMenu* userMenu = menuBar->addMenu(tr("유저"));
     QAction* userListAction = userMenu->addAction(tr("유저 목록"));
     connect(userListAction, &QAction::triggered, this, &MainWindow::requestUserList);
 }
 
-void MainWindow::setupConnections()
-{
+void MainWindow::setupConnections() {
     connect(ui->sendButton, &QPushButton::clicked, this, &MainWindow::sendMessage);
     connect(ui->messageInput, &QLineEdit::returnPressed, this, &MainWindow::sendMessage);
     connect(ui->userListButton, &QPushButton::clicked, this, &MainWindow::requestUserList);
-
-    // 그룹채팅 기능은 잠시 제외
-    // connect(ui->groupChatButton, &QPushButton::clicked, this, &MainWindow::showGroupChat);
+    connect(ui->createRoomButton, &QPushButton::clicked, this, &MainWindow::createNewRoom);
+    connect(ui->groupChatButton, &QPushButton::clicked, this, &MainWindow::showGroupChat);
+    connect(ui->userListButton2, &QPushButton::clicked, this, &MainWindow::requestUserList);
+    connect(ui->mainChatButton, &QPushButton::clicked, this, &MainWindow::showMainChat);
 }
 
-void MainWindow::connectToServer()
-{
+void MainWindow::connectToServer() {
     bool ok;
-    QString nickname = QInputDialog::getText(this, "닉네임 입력",
-                                           "사용할 닉네임을 입력하세요:",
-                                           QLineEdit::Normal,
-                                           "", &ok);
+    QString nickname = QInputDialog::getText(this, "닉네임 입력", "사용할 닉네임을 입력하세요:", QLineEdit::Normal, "", &ok);
     if (!ok || nickname.isEmpty()) {
         QMessageBox::critical(this, "오류", "닉네임을 입력해야 합니다.");
         close();
@@ -71,8 +57,7 @@ void MainWindow::connectToServer()
 
     chatClient = std::make_unique<ChatClient>();
     if (!chatClient->connect("localhost", 8080)) {
-        QMessageBox::critical(this, "연결 오류",
-                            "서버에 연결할 수 없습니다.");
+        QMessageBox::critical(this, "연결 오류", "서버에 연결할 수 없습니다.");
         close();
         return;
     }
@@ -83,14 +68,10 @@ void MainWindow::connectToServer()
 
     chatClient->start();
     ui->statusLabel->setText("연결됨");
-
-    // 서버에 닉네임 전송
-    std::cout << "[MainWindow] 닉네임 전송 요청: " << nickname.toStdString() << std::endl;
     chatClient->sendMessage("/nickname " + nickname.toStdString());
 }
 
-void MainWindow::sendMessage()
-{
+void MainWindow::sendMessage() {
     QString message = ui->messageInput->text().trimmed();
     if (!message.isEmpty()) {
         chatClient->sendMessage(message.toStdString());
@@ -98,50 +79,37 @@ void MainWindow::sendMessage()
     }
 }
 
-void MainWindow::appendMessage(const QString& message)
-{
-    std::cout << "[MainWindow] 받은 메시지: " << message.toStdString() << std::endl;
-    
-    // GUI 업데이트는 메인 스레드에서 실행
+void MainWindow::appendMessage(const QString& message) {
     QMetaObject::invokeMethod(this, [this, message]() {
         if (message.startsWith("USER_LIST:")) {
-            std::cout << "[MainWindow] 유저 목록 메시지 감지됨" << std::endl;
-            QString userListStr = message.mid(QString("USER_LIST:").length());
-            QStringList users = userListStr.split(",", Qt::SkipEmptyParts);
-            
-            std::cout << "[MainWindow] 파싱된 유저 목록: " << users.join(", ").toStdString() << std::endl;
-            
-            if (!userListWindow) {
-                std::cout << "[MainWindow] 새로운 UserListWindow 생성" << std::endl;
-                userListWindow = std::make_unique<UserListWindow>(this);
-            }
-            
+            QStringList users = message.mid(10).split(",", Qt::SkipEmptyParts);
+            if (!userListWindow) userListWindow = std::make_unique<UserListWindow>(this);
             userListWindow->updateUserList(users);
             userListWindow->show();
-            userListWindow->raise();
-            userListWindow->activateWindow();
         } else {
             ui->chatDisplay->append(message);
         }
     }, Qt::QueuedConnection);
 }
 
-void MainWindow::requestUserList()
-{
-    if (chatClient) {
-        chatClient->sendMessage("/users");
-    }
+void MainWindow::requestUserList() {
+    if (chatClient) chatClient->sendMessage("/users");
 }
 
-// 그룹채팅 관련 코드 주석처리 (추후 필요 시 복원)
-/*
-void MainWindow::showGroupChat()
-{
+// 🔽 그룹채팅 슬롯 구현
+void MainWindow::showGroupChat() {
     ui->stackedWidget->setCurrentWidget(ui->groupChatWidget);
 }
 
-void MainWindow::showMainChat()
-{
+void MainWindow::showMainChat() {
     ui->stackedWidget->setCurrentWidget(ui->mainChatWidget);
 }
-*/
+
+void MainWindow::createNewRoom() {
+    bool ok;
+    QString roomName = QInputDialog::getText(this, "새 채팅방", "채팅방 이름을 입력하세요:", QLineEdit::Normal, "", &ok);
+    if (ok && !roomName.isEmpty()) {
+        chatClient->sendMessage("/create_room " + roomName.toStdString());
+        QMessageBox::information(this, "알림", "채팅방 [" + roomName + "] 생성 요청을 전송했습니다.");
+    }
+}

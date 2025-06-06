@@ -230,6 +230,58 @@ void Server::handleClientData(const std::string& clientId, const std::string& da
         // 닉네임 변경 후 유저 목록 브로드캐스트
         broadcastActiveUsers();
     }
+    else if (trimmedData.find("/create_room ") == 0) {
+        // ✅ [새로 추가된 부분]
+        std::string roomName = trimmedData.substr(std::string("/create_room ").length());
+        std::cout << "[서버] 방 생성 요청: " << roomName << std::endl;
+
+        auto& userManager = ActiveUsersManager::getInstance();
+        std::string creatorNickname = userManager.isUserActive(clientId)
+            ? userManager.getAllActiveUsers()[clientId].nickname
+            : clientId;
+
+        bool created = ChatRoomManager::getInstance().createRoom(roomName, creatorNickname, false, "");
+
+        std::string response = created
+            ? "채팅방 [" + roomName + "] 생성 완료\n"
+            : "채팅방 생성 실패: 같은 이름의 방이 존재합니다\n";
+
+        auto socket = clients_[clientId];
+        if (socket && socket->is_open()) {
+            boost::system::error_code ec;
+            boost::asio::write(*socket, boost::asio::buffer(response), ec);
+            if (ec) {
+                std::cerr << "[서버] 응답 전송 실패: " << ec.message() << std::endl;
+                handleClientDisconnection(clientId);
+            }
+        }
+    }
+    else if (trimmedData == "/list_rooms") {
+    std::cout << "[서버] /list_rooms 요청 처리 중!" << std::endl;
+
+    std::vector<std::string> roomList = ChatRoomManager::getInstance().getAllRooms();
+
+    std::string response = "ROOM_LIST:";
+    for (const auto& room : roomList) {
+        response += room + ",";
+    }
+    if (!roomList.empty()) {
+        response.pop_back(); // 마지막 쉼표 제거
+    }
+    response += "\n";
+
+    auto socket = clients_[clientId];
+    if (socket && socket->is_open()) {
+        boost::system::error_code ec;
+        boost::asio::write(*socket, boost::asio::buffer(response), ec);
+        if (ec) {
+            std::cerr << "[서버] 방 목록 전송 실패: " << ec.message() << std::endl;
+            handleClientDisconnection(clientId);
+        } else {
+            std::cout << "[서버] 방 목록 전송 완료" << std::endl;
+        }
+    }
+}
     else {
         std::string message = "[" + clientId + "] " + data;
         for (const auto& [id, socket] : clients_) {

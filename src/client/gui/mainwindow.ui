@@ -6,84 +6,150 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>391</width>
-    <height>685</height>
+    <width>411</width>
+    <height>690</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLineEdit" name="messageInput">
+   <widget class="QStackedWidget" name="stackedWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>590</y>
-      <width>281</width>
-      <height>41</height>
+      <x>0</x>
+      <y>20</y>
+      <width>411</width>
+      <height>631</height>
      </rect>
     </property>
-   </widget>
-   <widget class="QPushButton" name="sendButton">
-    <property name="geometry">
-     <rect>
-      <x>300</x>
-      <y>590</y>
-      <width>75</width>
-      <height>41</height>
-     </rect>
+    <property name="currentIndex">
+     <number>0</number>
     </property>
-    <property name="text">
-     <string>전송</string>
-    </property>
+    <widget class="QWidget" name="mainChatWidget">
+     <widget class="QTextEdit" name="chatDisplay">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>391</width>
+        <height>511</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="sendButton">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>580</y>
+        <width>75</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>전송</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="groupChatButton">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>30</y>
+        <width>75</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>그룹채팅</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="userListButton">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>0</y>
+        <width>75</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>유저 목록</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="messageInput">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>580</y>
+        <width>301</width>
+        <height>41</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="groupChatWidget">
+     <widget class="QListWidget" name="roomListWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>391</width>
+        <height>491</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="createRoomButton">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>560</y>
+        <width>391</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>방 새로 만들기</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="userListButton2">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>0</y>
+        <width>75</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>유저 목록</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="mainChatButton">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>30</y>
+        <width>75</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>전체채팅</string>
+      </property>
+     </widget>
+    </widget>
    </widget>
    <widget class="QLabel" name="statusLabel">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>0</x>
       <y>0</y>
-      <width>50</width>
+      <width>41</width>
       <height>16</height>
      </rect>
     </property>
     <property name="text">
      <string>연결중..</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="userListButton">
-    <property name="geometry">
-     <rect>
-      <x>300</x>
-      <y>0</y>
-      <width>75</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>유저 목록</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="groupChatButton">
-    <property name="geometry">
-     <rect>
-      <x>300</x>
-      <y>30</y>
-      <width>75</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>그룹채팅</string>
-    </property>
-   </widget>
-   <widget class="QTextEdit" name="chatDisplay">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>60</y>
-      <width>361</width>
-      <height>521</height>
-     </rect>
     </property>
    </widget>
   </widget>
@@ -95,8 +161,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>391</width>
-     <height>33</height>
+     <width>411</width>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="groupChatMenu">
