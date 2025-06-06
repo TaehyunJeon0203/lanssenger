@@ -1,4 +1,5 @@
 #include "server/server.hpp"
+#include "common/chat_room.hpp"
 #include <iostream>
 
 namespace lanssenger {
@@ -283,7 +284,15 @@ void Server::handleClientData(const std::string& clientId, const std::string& da
     }
 }
     else {
-        std::string message = "[" + clientId + "] " + data;
+        auto& userManager = ActiveUsersManager::getInstance();
+        std::string nickname = userManager.isUserActive(clientId)
+            ? userManager.getAllActiveUsers()[clientId].nickname
+            : clientId;
+        std::string ipLastThree = userManager.isUserActive(clientId)
+            ? userManager.getAllActiveUsers()[clientId].ipLastThree
+            : clientId.substr(clientId.find_last_of(":") + 1);
+
+        std::string message = nickname + "(" + ipLastThree + "): " + data;
         for (const auto& [id, socket] : clients_) {
             if (socket && socket->is_open()) {
                 try {

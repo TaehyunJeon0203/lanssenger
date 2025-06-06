@@ -42,6 +42,7 @@ add_executable(server
     src/server/main.cpp
     src/server/server.cpp
     src/common/active_users.cpp
+    src/common/chat_room.cpp
 )
 
 target_include_directories(server PRIVATE

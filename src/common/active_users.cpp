@@ -12,11 +12,11 @@ ActiveUsersManager& ActiveUsersManager::getInstance() {
 void ActiveUsersManager::addUser(const std::string& userId, const std::string& nickname, const std::string& ipAddress) {
     std::lock_guard<std::mutex> lock(mutex_);
     
-    // IP 주소의 마지막 3자리 추출
+    // IP 주소의 마지막 점(.)부터 끝까지 추출
     std::string lastThree;
     size_t lastDot = ipAddress.find_last_of('.');
     if (lastDot != std::string::npos) {
-        lastThree = ipAddress.substr(lastDot + 1);
+        lastThree = ipAddress.substr(lastDot);  // ".134" 형식으로 저장
     } else {
         lastThree = ipAddress;
     }
