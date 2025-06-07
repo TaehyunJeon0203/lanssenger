@@ -19,12 +19,11 @@ cmake .. ^
  -DCMAKE_THREAD_LIBS_INIT=""
 
 REM 빌드 실행
-ninja client client_gui
+ninja client_gui
 
 REM Qt DLL 배포
 echo Qt 런타임 의존성 복사 중...
 "C:\Qt\6.9.0\msvc2022_64\bin\windeployqt.exe" client_gui.exe
 
 echo 클라이언트 빌드가 완료되었습니다.
-echo 콘솔 버전 실행: .\build\client.exe
 echo GUI 버전 실행: .\build\client_gui.exe

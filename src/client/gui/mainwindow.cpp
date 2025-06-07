@@ -7,7 +7,8 @@
 #include <QDebug>
 #include "client/gui/userlistwindow.hpp"
 #include "client/gui/createRoom.hpp"
-#include "../main.cpp"
+#include "client/chat_client.hpp"
+#include <memory>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {

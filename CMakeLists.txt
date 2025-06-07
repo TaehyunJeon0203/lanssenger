@@ -70,13 +70,6 @@ if(NOT DEFINED BUILD_SERVER_ONLY)
         src/client/gui/createRoom.ui
     )
 
-    # 콘솔 클라이언트 실행 파일
-    add_executable(client
-        src/client/main.cpp
-        src/client/nickname_manager.cpp
-    )
-    target_compile_definitions(client PRIVATE CONSOLE_CLIENT)
-
     # GUI 클라이언트 실행 파일
     add_executable(client_gui
         src/client/gui/main_gui.cpp
@@ -84,22 +77,12 @@ if(NOT DEFINED BUILD_SERVER_ONLY)
         src/client/gui/mainwindow.cpp
         src/client/gui/userlistwindow.cpp
         src/client/gui/createRoom.cpp
+        src/client/chat_client.cpp
         include/client/gui/mainwindow.hpp
         include/client/gui/userlistwindow.hpp
         include/client/gui/createRoom.hpp
+        include/client/chat_client.hpp
         ${UI_FILES}
-    )
-
-    target_include_directories(client PRIVATE
-        ${CMAKE_SOURCE_DIR}/include
-    )
-
-    # 클라이언트 링크 - pthread 대신 Threads::Threads 사용
-    target_link_libraries(client
-        ${Boost_LIBRARIES}
-        Threads::Threads
-        Qt6::Core
-        Qt6::Widgets
     )
 
     # GUI 클라이언트 링크 - pthread 대신 Threads::Threads 사용
