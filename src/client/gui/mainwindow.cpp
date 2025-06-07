@@ -57,8 +57,15 @@ void MainWindow::connectToServer() {
         return;
     }
 
+    QString serverIp = QInputDialog::getText(this, "서버 IP 입력", "서버 IP 주소를 입력하세요:", QLineEdit::Normal, "localhost", &ok);
+    if (!ok) {
+        QMessageBox::critical(this, "오류", "서버 IP를 입력해야 합니다.");
+        close();
+        return;
+    }
+
     chatClient = std::make_unique<ChatClient>();
-    if (!chatClient->connect("localhost", 8080)) {
+    if (!chatClient->connect(serverIp.toStdString(), 8080)) {
         QMessageBox::critical(this, "연결 오류", "서버에 연결할 수 없습니다.");
         close();
         return;
