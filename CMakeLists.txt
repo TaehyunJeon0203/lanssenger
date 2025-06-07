@@ -67,6 +67,7 @@ if(NOT DEFINED BUILD_SERVER_ONLY)
     # UI 파일
     set(UI_FILES
         src/client/gui/mainwindow.ui
+        src/client/gui/createRoom.ui
     )
 
     # 콘솔 클라이언트 실행 파일
@@ -82,8 +83,10 @@ if(NOT DEFINED BUILD_SERVER_ONLY)
         src/client/nickname_manager.cpp
         src/client/gui/mainwindow.cpp
         src/client/gui/userlistwindow.cpp
+        src/client/gui/createRoom.cpp
         include/client/gui/mainwindow.hpp
         include/client/gui/userlistwindow.hpp
+        include/client/gui/createRoom.hpp
         ${UI_FILES}
     )
 

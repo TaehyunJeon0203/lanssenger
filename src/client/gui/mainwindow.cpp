@@ -6,6 +6,7 @@
 #include <QMenu>
 #include <QDebug>
 #include "client/gui/userlistwindow.hpp"
+#include "client/gui/createRoom.hpp"
 #include "../main.cpp"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -106,10 +107,23 @@ void MainWindow::showMainChat() {
 }
 
 void MainWindow::createNewRoom() {
-    bool ok;
-    QString roomName = QInputDialog::getText(this, "새 채팅방", "채팅방 이름을 입력하세요:", QLineEdit::Normal, "", &ok);
-    if (ok && !roomName.isEmpty()) {
-        chatClient->sendMessage("/create_room " + roomName.toStdString());
-        QMessageBox::information(this, "알림", "채팅방 [" + roomName + "] 생성 요청을 전송했습니다.");
+    CreateRoomDialog dialog(this);
+    if (dialog.exec() == QDialog::Accepted) {
+        QString roomName = dialog.getRoomName().trimmed();
+        QString password = dialog.getPassword().trimmed();
+        bool isPrivate = dialog.isPrivate();
+
+        if (roomName.isEmpty()) {
+            QMessageBox::warning(this, "경고", "방 이름을 입력하세요.");
+            return;
+        }
+
+        QString command = QString("/create_room %1").arg(roomName);
+        if (isPrivate && !password.isEmpty()) {
+            command += QString(" --private --password %1").arg(password);
+        }
+
+        chatClient->sendMessage(command.toStdString());
     }
 }
+

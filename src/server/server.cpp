@@ -283,6 +283,35 @@ void Server::handleClientData(const std::string& clientId, const std::string& da
         }
     }
 }
+
+    else if (trimmedData.find("/create_room ") == 0) {
+    std::istringstream iss(trimmedData);
+    std::string cmd, roomName, opt;
+    bool isPrivate = false;
+    std::string password = "";
+
+    iss >> cmd >> roomName;
+
+    while (iss >> opt) {
+        if (opt == "--private") isPrivate = true;
+        else if (opt == "--password") iss >> password;
+    }
+
+    std::string creatorNickname = ActiveUsersManager::getInstance().isUserActive(clientId)
+        ? ActiveUsersManager::getInstance().getAllActiveUsers()[clientId].nickname
+        : clientId;
+
+    bool created = ChatRoomManager::getInstance().createRoom(roomName, creatorNickname, isPrivate, password);
+
+    std::string response = created
+        ? "채팅방 [" + roomName + "] 생성 완료\n"
+        : "채팅방 생성 실패: 같은 이름의 방이 존재합니다\n";
+
+    auto socket = clients_[clientId];
+    if (socket && socket->is_open()) {
+        boost::asio::write(*socket, boost::asio::buffer(response + "\n"));
+    }
+}
     else {
         auto& userManager = ActiveUsersManager::getInstance();
         std::string nickname = userManager.isUserActive(clientId)
