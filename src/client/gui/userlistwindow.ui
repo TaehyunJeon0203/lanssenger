@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>유저 목록</string>
+   <string>유저목록</string>
   </property>
   <layout class="QVBoxLayout" name="mainLayout">
    <item>
@@ -22,3 +22,4 @@
  <resources/>
  <connections/>
 </ui>
+
