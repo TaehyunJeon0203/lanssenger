@@ -22,6 +22,56 @@
   - 현재 활동중인 인원 표시
   - 닉네임 형식(태현.xxx) <- .xxx == ip의 일부(지정 불가능)
 
+## 📁 프로젝트 구조
+
+```
+lanssenger/
+├── include/
+│   ├── client/
+│   │   ├── gui/           # GUI 관련 헤더
+│   │   ├── chat_client.hpp
+│   │   ├── chat_manager.hpp
+│   │   ├── chat_message.hpp
+│   │   └── nickname_manager.hpp
+│   ├── server/
+│   └── common/
+├── src/
+│   ├── client/
+│   │   ├── gui/           # GUI 관련 소스
+│   │   ├── chat_client.cpp
+│   │   ├── chat_manager.cpp
+│   │   ├── chat_message.cpp
+│   │   └── nickname_manager.cpp
+│   ├── server/
+│   └── common/
+└── scripts/               # 빌드 스크립트
+```
+
+## 🛠 빌드 방법
+
+### 요구사항
+
+- CMake 3.10 이상
+- Qt6
+- Boost
+- C++17 지원 컴파일러
+
+### 빌드
+
+1. 클라이언트 빌드:
+
+```bash
+./scripts/build_client.sh  # Linux/macOS
+scripts/build_client.bat   # Windows
+```
+
+2. 서버 빌드:
+
+```bash
+./scripts/build_server.sh  # Linux/macOS
+scripts/build_server.bat   # Windows
+```
+
 ## 📝 계획서(완료)
 
 한글로 작성
