@@ -7,7 +7,7 @@ CreateRoomDialog::CreateRoomDialog(QWidget *parent)
     ui->setupUi(this);
     ui->lineEdit_2->setEnabled(false);
 
-    connect(ui->checkBox, &QCheckBox::stateChanged,
+    connect(ui->checkBox, &QCheckBox::checkStateChanged,
             this, &CreateRoomDialog::on_checkBox_stateChanged);
 }
 
