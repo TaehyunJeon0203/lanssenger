@@ -5,6 +5,7 @@
 #include <QMenuBar>
 #include <QMenu>
 #include <QDebug>
+#include <QSettings>
 #include "client/gui/userlistwindow.hpp"
 #include "client/gui/createRoom.hpp"
 #include "client/chat_client.hpp"
@@ -49,12 +50,30 @@ void MainWindow::setupConnections() {
 }
 
 void MainWindow::connectToServer() {
+    QSettings settings;
+    QString savedNickname = settings.value("nickname").toString();
     bool ok;
-    QString nickname = QInputDialog::getText(this, "닉네임 입력", "사용할 닉네임을 입력하세요:", QLineEdit::Normal, "", &ok);
-    if (!ok || nickname.isEmpty()) {
-        QMessageBox::critical(this, "오류", "닉네임을 입력해야 합니다.");
-        close();
-        return;
+
+    QString nickname;
+    if (savedNickname.isEmpty()) {
+        nickname = QInputDialog::getText(this, "닉네임 입력", "사용할 닉네임을 입력하세요:", QLineEdit::Normal, "", &ok);
+        if (!ok || nickname.isEmpty()) {
+            QMessageBox::critical(this, "오류", "닉네임을 입력해야 합니다.");
+            close();
+            return;
+        }
+        // 닉네임 저장
+        settings.setValue("nickname", nickname);
+    } else {
+        nickname = QInputDialog::getText(this, "닉네임 입력", "사용할 닉네임을 입력하세요:", QLineEdit::Normal, savedNickname, &ok);
+        if (!ok) {
+            close();
+            return;
+        }
+        if (nickname != savedNickname) {
+            // 닉네임이 변경된 경우 저장
+            settings.setValue("nickname", nickname);
+        }
     }
 
     QString serverIp = QInputDialog::getText(this, "서버 IP 입력", "서버 IP 주소를 입력하세요:", QLineEdit::Normal, "localhost", &ok);
