@@ -2,13 +2,14 @@
 #include "ui_createRoom.h"
 
 CreateRoomDialog::CreateRoomDialog(QWidget *parent)
-    : QDialog(parent), ui(new Ui::Dialog)
+    : QDialog(parent), ui(new Ui::CreateRoomDialog)
 {
     ui->setupUi(this);
     ui->setRoomCode->setEnabled(false);
 
     connect(ui->setCodeCheckBox, &QCheckBox::checkStateChanged,
             this, &CreateRoomDialog::on_checkBox_stateChanged);
+    connect(ui->createRoomButton, &QPushButton::clicked, this, &QDialog::accept);
 }
 
 CreateRoomDialog::~CreateRoomDialog() {

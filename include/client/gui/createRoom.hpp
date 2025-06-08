@@ -1,9 +1,11 @@
-#pragma once
+#ifndef CREATEROOM_HPP
+#define CREATEROOM_HPP
 
 #include <QDialog>
+#include <QString>
 
 namespace Ui {
-class Dialog;
+class CreateRoomDialog;
 }
 
 class CreateRoomDialog : public QDialog {
@@ -21,5 +23,7 @@ private slots:
     void on_checkBox_stateChanged(int state);
 
 private:
-    Ui::Dialog *ui;
+    Ui::CreateRoomDialog *ui;
 };
+
+#endif // CREATEROOM_HPP
