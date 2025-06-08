@@ -30,6 +30,7 @@ QString GroupChatWindow::getInputText() const {
 }
 
 void GroupChatWindow::setRoomTitle(const QString& roomName) {
+    roomTitle = roomName;
     ui->currentRoomLabel->setText("방 이름: " + roomName);
 }
 

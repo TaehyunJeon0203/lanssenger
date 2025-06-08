@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <memory>
 #include <QListWidgetItem>
+#include <vector>
+#include "client/gui/groupchatwindow.hpp"
 
 class UserListWindow;
 class ChatClient;
@@ -24,7 +26,7 @@ private:
     Ui::MainWindow *ui;
     std::unique_ptr<ChatClient> chatClient;
     std::unique_ptr<UserListWindow> userListWindow;
-    std::unique_ptr<GroupChatWindow> groupChatWindow;
+    std::vector<std::unique_ptr<GroupChatWindow>> groupChatWindows;
     QString currentRoomName;
 
     void setupMenuBar();
@@ -40,7 +42,7 @@ private slots:
     void showGroupChat();
     void showMainChat();
     void createNewRoom();
-    void joinSelectedRoom(QListWidgetItem* item);
+    void joinSelectedRoom();
     void sendGroupMessage(const QString& msg);
 };
 

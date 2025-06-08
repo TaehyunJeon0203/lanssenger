@@ -16,6 +16,7 @@ public:
     void appendMessage(const QString& msg);
     QString getInputText() const;
     void setRoomTitle(const QString& roomName);
+    QString getRoomTitle() const { return roomTitle; }
 
 signals:
     void sendMessageRequested(const QString& message);
@@ -25,4 +26,5 @@ private slots:
 
 private:
     Ui::GroupChatWindow *ui;
+    QString roomTitle;
 };

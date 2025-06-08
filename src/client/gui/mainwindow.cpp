@@ -128,8 +128,8 @@ void MainWindow::appendMessage(const QString& message) {
             ui->roomListWidget->addItems(rooms);
         } else if (message.startsWith("ROOM_MSG:")) {
             QString roomMsg = message.mid(9);
-            if (groupChatWindow) {
-                groupChatWindow->appendMessage(roomMsg);
+            if (!groupChatWindows.empty()) {
+                groupChatWindows.back()->appendMessage(roomMsg);
             }
         } else {
             ui->chatDisplay->append(message);
@@ -176,30 +176,39 @@ void MainWindow::createNewRoom() {
         chatClient->sendMessage("/list_rooms");
 
         // ✅ 새 창 열기
-        if (!groupChatWindow) {
-            groupChatWindow = std::make_unique<GroupChatWindow>(this);
-            connect(groupChatWindow.get(), &GroupChatWindow::sendMessageRequested, this, &MainWindow::sendGroupMessage);
-        }
-
-        groupChatWindow->setRoomTitle(roomName);
-        groupChatWindow->show();
+        auto newGroupChatWindow = std::make_unique<GroupChatWindow>(this);
+        connect(newGroupChatWindow.get(), &GroupChatWindow::sendMessageRequested, this, &MainWindow::sendGroupMessage);
+        newGroupChatWindow->setRoomTitle(roomName);
+        newGroupChatWindow->show();
+        groupChatWindows.push_back(std::move(newGroupChatWindow));
     }
 }
 
-void MainWindow::joinSelectedRoom(QListWidgetItem* item) {
-    if (!item) return;
-    QString roomName = item->text();
-    currentRoomName = roomName;
+void MainWindow::joinSelectedRoom() {
+    QListWidgetItem* selectedItem = ui->roomListWidget->currentItem();
+    if (selectedItem) {
+        QString roomName = selectedItem->text();
+        currentRoomName = roomName;
+        chatClient->sendMessage(QString("/join_room %1").arg(roomName).toStdString());
 
-    chatClient->sendMessage(QString("/join_room %1").arg(roomName).toStdString());
+        // 이미 열려있는 창이 있는지 확인
+        for (const auto& window : groupChatWindows) {
+            if (window->getRoomTitle() == roomName) {
+                // 이미 열려있는 창이 있으면 해당 창을 활성화
+                window->show();
+                window->raise();
+                window->activateWindow();
+                return;
+            }
+        }
 
-    if (!groupChatWindow) {
-        groupChatWindow = std::make_unique<GroupChatWindow>(this);
-        connect(groupChatWindow.get(), &GroupChatWindow::sendMessageRequested, this, &MainWindow::sendGroupMessage);
+        // 열려있는 창이 없으면 새로 생성
+        auto newGroupChatWindow = std::make_unique<GroupChatWindow>(this);
+        connect(newGroupChatWindow.get(), &GroupChatWindow::sendMessageRequested, this, &MainWindow::sendGroupMessage);
+        newGroupChatWindow->setRoomTitle(roomName);
+        newGroupChatWindow->show();
+        groupChatWindows.push_back(std::move(newGroupChatWindow));
     }
-
-    groupChatWindow->setRoomTitle(roomName);
-    groupChatWindow->show();
 }
 
 void MainWindow::sendGroupMessage(const QString& msg) {
