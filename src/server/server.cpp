@@ -181,45 +181,16 @@ void Server::handleClientDisconnection(const std::string& clientId)
 void Server::handleClientData(const std::string& clientId, const std::string& data)
 {
     std::string trimmedData = data;
-    trimmedData.erase(trimmedData.find_last_not_of("\r\n") + 1);
+    if (!trimmedData.empty() && trimmedData.back() == '\n') {
+        trimmedData.pop_back();
+    }
 
-    std::cout << "[서버] 받은 데이터: [" << trimmedData << "]" << std::endl;
+    if (trimmedData.empty()) {
+        return;
+    }
 
     if (trimmedData == "/users") {
-        std::cout << "[서버] /users 요청 처리 중!" << std::endl;
-
-        auto socket = clients_[clientId];
-        if (socket && socket->is_open()) {
-            try {
-                auto activeUsers = ActiveUsersManager::getInstance().getAllActiveUsers();
-                std::string userList = "USER_LIST:";
-
-                for (const auto& [id, info] : activeUsers) {
-                    userList += info.nickname + "(" + info.ipLastThree + "),";
-                }
-                if (!userList.empty() && userList.back() == ',') {
-                    userList.pop_back();
-                }
-                userList += "\n";
-
-                std::cout << "[서버] 유저 목록 전송: [" << userList << "]" << std::endl;
-                
-                boost::system::error_code ec;
-                size_t written = boost::asio::write(*socket, boost::asio::buffer(userList), ec);
-                
-                if (ec) {
-                    std::cerr << "[서버] 유저 목록 전송 실패: " << ec.message() << std::endl;
-                    handleClientDisconnection(clientId);
-                    return;
-                }
-                
-                std::cout << "[서버] 유저 목록 전송 완료: " << written << " bytes" << std::endl;
-            } catch (const std::exception& e) {
-                std::cerr << "[서버] 유저 목록 전송 중 오류: " << e.what() << std::endl;
-                handleClientDisconnection(clientId);
-                return;
-            }
-        }
+        broadcastActiveUsers();
     }
     else if (trimmedData.find("/nickname ") == 0) {
         std::string nickname = trimmedData.substr(10);
@@ -232,16 +203,23 @@ void Server::handleClientData(const std::string& clientId, const std::string& da
         broadcastActiveUsers();
     }
     else if (trimmedData.find("/create_room ") == 0) {
-        // ✅ [새로 추가된 부분]
-        std::string roomName = trimmedData.substr(std::string("/create_room ").length());
-        std::cout << "[서버] 방 생성 요청: " << roomName << std::endl;
+        std::istringstream iss(trimmedData);
+        std::string cmd, roomName, opt;
+        bool isPrivate = false;
+        std::string password = "";
 
-        auto& userManager = ActiveUsersManager::getInstance();
-        std::string creatorNickname = userManager.isUserActive(clientId)
-            ? userManager.getAllActiveUsers()[clientId].nickname
+        iss >> cmd >> roomName;
+
+        while (iss >> opt) {
+            if (opt == "--private") isPrivate = true;
+            else if (opt == "--password") iss >> password;
+        }
+
+        std::string creatorNickname = ActiveUsersManager::getInstance().isUserActive(clientId)
+            ? ActiveUsersManager::getInstance().getAllActiveUsers()[clientId].nickname
             : clientId;
 
-        bool created = ChatRoomManager::getInstance().createRoom(roomName, creatorNickname, false, "");
+        bool created = ChatRoomManager::getInstance().createRoom(roomName, creatorNickname, isPrivate, password);
 
         std::string response = created
             ? "채팅방 [" + roomName + "] 생성 완료\n"
@@ -249,69 +227,88 @@ void Server::handleClientData(const std::string& clientId, const std::string& da
 
         auto socket = clients_[clientId];
         if (socket && socket->is_open()) {
+            boost::asio::write(*socket, boost::asio::buffer(response + "\n"));
+        }
+    }
+    else if (trimmedData.find("/list_rooms") == 0) {
+        std::cout << "[서버] /list_rooms 요청 처리 중!" << std::endl;
+
+        std::vector<std::string> roomList = ChatRoomManager::getInstance().getAllRooms();
+
+        std::string response = "ROOM_LIST:";
+        for (const auto& room : roomList) {
+            response += room + ",";
+        }
+        if (!roomList.empty()) {
+            response.pop_back(); // 마지막 쉼표 제거
+        }
+        response += "\n";
+
+        auto socket = clients_[clientId];
+        if (socket && socket->is_open()) {
             boost::system::error_code ec;
             boost::asio::write(*socket, boost::asio::buffer(response), ec);
             if (ec) {
-                std::cerr << "[서버] 응답 전송 실패: " << ec.message() << std::endl;
+                std::cerr << "[서버] 방 목록 전송 실패: " << ec.message() << std::endl;
                 handleClientDisconnection(clientId);
+            } else {
+                std::cout << "[서버] 방 목록 전송 완료" << std::endl;
             }
         }
     }
-    else if (trimmedData == "/list_rooms") {
-    std::cout << "[서버] /list_rooms 요청 처리 중!" << std::endl;
+    else if (trimmedData.find("/join_room ") == 0) {
+        std::string roomName = trimmedData.substr(11);
+        std::cout << "[서버] 방 참여 요청: " << roomName << std::endl;
 
-    std::vector<std::string> roomList = ChatRoomManager::getInstance().getAllRooms();
+        bool joined = ChatRoomManager::getInstance().joinRoom(roomName, clientId);
+        std::string response = joined
+            ? "채팅방 [" + roomName + "] 참여 완료\n"
+            : "채팅방 참여 실패: 방이 존재하지 않거나 이미 참여 중입니다\n";
 
-    std::string response = "ROOM_LIST:";
-    for (const auto& room : roomList) {
-        response += room + ",";
-    }
-    if (!roomList.empty()) {
-        response.pop_back(); // 마지막 쉼표 제거
-    }
-    response += "\n";
-
-    auto socket = clients_[clientId];
-    if (socket && socket->is_open()) {
-        boost::system::error_code ec;
-        boost::asio::write(*socket, boost::asio::buffer(response), ec);
-        if (ec) {
-            std::cerr << "[서버] 방 목록 전송 실패: " << ec.message() << std::endl;
-            handleClientDisconnection(clientId);
-        } else {
-            std::cout << "[서버] 방 목록 전송 완료" << std::endl;
+        auto socket = clients_[clientId];
+        if (socket && socket->is_open()) {
+            boost::asio::write(*socket, boost::asio::buffer(response + "\n"));
         }
     }
-}
+    else if (trimmedData.find("/room_msg ") == 0) {
+        std::istringstream iss(trimmedData);
+        std::string cmd, roomName, message;
+        iss >> cmd >> roomName;
+        
+        // 나머지 메시지 내용을 가져옴
+        std::getline(iss, message);
+        if (!message.empty() && message[0] == ' ') {
+            message = message.substr(1); // 앞의 공백 제거
+        }
 
-    else if (trimmedData.find("/create_room ") == 0) {
-    std::istringstream iss(trimmedData);
-    std::string cmd, roomName, opt;
-    bool isPrivate = false;
-    std::string password = "";
+        auto& roomManager = ChatRoomManager::getInstance();
+        auto* roomInfo = roomManager.getRoomInfo(roomName);
+        
+        if (roomInfo && roomInfo->members.find(clientId) != roomInfo->members.end()) {
+            auto& userManager = ActiveUsersManager::getInstance();
+            std::string nickname = userManager.isUserActive(clientId)
+                ? userManager.getAllActiveUsers()[clientId].nickname
+                : clientId;
+            std::string ipLastThree = userManager.isUserActive(clientId)
+                ? userManager.getAllActiveUsers()[clientId].ipLastThree
+                : clientId.substr(clientId.find_last_of(":") + 1);
 
-    iss >> cmd >> roomName;
-
-    while (iss >> opt) {
-        if (opt == "--private") isPrivate = true;
-        else if (opt == "--password") iss >> password;
+            std::string formattedMessage = "ROOM_MSG:" + nickname + "(" + ipLastThree + "): " + message + "\n";
+            
+            // 방에 있는 모든 멤버에게 메시지 전송
+            for (const auto& memberId : roomInfo->members) {
+                auto it = clients_.find(memberId);
+                if (it != clients_.end() && it->second && it->second->is_open()) {
+                    boost::system::error_code ec;
+                    boost::asio::write(*it->second, boost::asio::buffer(formattedMessage), ec);
+                    if (ec) {
+                        std::cerr << "[서버] 방 메시지 전송 실패: " << ec.message() << std::endl;
+                        handleClientDisconnection(memberId);
+                    }
+                }
+            }
+        }
     }
-
-    std::string creatorNickname = ActiveUsersManager::getInstance().isUserActive(clientId)
-        ? ActiveUsersManager::getInstance().getAllActiveUsers()[clientId].nickname
-        : clientId;
-
-    bool created = ChatRoomManager::getInstance().createRoom(roomName, creatorNickname, isPrivate, password);
-
-    std::string response = created
-        ? "채팅방 [" + roomName + "] 생성 완료\n"
-        : "채팅방 생성 실패: 같은 이름의 방이 존재합니다\n";
-
-    auto socket = clients_[clientId];
-    if (socket && socket->is_open()) {
-        boost::asio::write(*socket, boost::asio::buffer(response + "\n"));
-    }
-}
     else {
         auto& userManager = ActiveUsersManager::getInstance();
         std::string nickname = userManager.isUserActive(clientId)

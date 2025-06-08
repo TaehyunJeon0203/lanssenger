@@ -7,6 +7,7 @@ GroupChatWindow::GroupChatWindow(QWidget *parent)
 {
     ui->setupUi(this);
     setWindowFlags(Qt::Window | Qt::WindowCloseButtonHint);
+    ui->GCChatDisplay->setReadOnly(true);
 
     if (parent) {
         QPoint parentPos = parent->mapToGlobal(parent->rect().topRight());

@@ -127,9 +127,13 @@ void MainWindow::appendMessage(const QString& message) {
             ui->roomListWidget->clear();
             ui->roomListWidget->addItems(rooms);
         } else if (message.startsWith("ROOM_MSG:")) {
-            QString roomMsg = message.mid(9);
-            if (!groupChatWindows.empty()) {
-                groupChatWindows.back()->appendMessage(roomMsg);
+            QString roomMsg = message.mid(9);  // "ROOM_MSG:" 이후의 전체 메시지 (닉네임(IP): 메시지)
+            // 현재 선택된 방의 창에 메시지 전달
+            for (const auto& window : groupChatWindows) {
+                if (window->getRoomTitle() == currentRoomName) {
+                    window->appendMessage(roomMsg);
+                    break;
+                }
             }
         } else {
             ui->chatDisplay->append(message);
