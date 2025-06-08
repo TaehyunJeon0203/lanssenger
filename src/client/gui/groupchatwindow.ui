@@ -13,14 +13,23 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: #C6C1BD</string>
+  </property>
   <widget class="QTextEdit" name="GCChatDisplay">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>9</x>
      <y>60</y>
      <width>391</width>
      <height>571</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color:#EFEEEE;
+color: #26313E; 
+
+</string>
    </property>
   </widget>
   <widget class="QPushButton" name="inviteButton">
@@ -31,6 +40,9 @@
      <width>75</width>
      <height>24</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: #9C857B</string>
    </property>
    <property name="text">
     <string>초대</string>
@@ -45,6 +57,12 @@
      <height>41</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color:#EFEEEE;
+color: #26313E; 
+
+</string>
+   </property>
   </widget>
   <widget class="QPushButton" name="GCSendButton">
    <property name="geometry">
@@ -55,6 +73,9 @@
      <height>41</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: #9C857B</string>
+   </property>
    <property name="text">
     <string>전송</string>
    </property>
@@ -62,14 +83,20 @@
   <widget class="QLabel" name="currentRoomLabel">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>20</y>
-     <width>200</width>
-     <height>24</height>
+     <x>140</x>
+     <y>16</y>
+     <width>141</width>
+     <height>31</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>궁서</family>
+     <pointsize>17</pointsize>
+    </font>
+   </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string>LANssenger</string>
    </property>
   </widget>
  </widget>

@@ -13,9 +13,19 @@
   <property name="windowTitle">
    <string>유저목록</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: #C6C1BD</string>
+  </property>
   <layout class="QVBoxLayout" name="mainLayout">
    <item>
-    <widget class="QListWidget" name="userListWidget"/>
+    <widget class="QListWidget" name="userListWidget">
+     <property name="styleSheet">
+      <string notr="true">background-color:#EFEEEE
+
+
+</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
