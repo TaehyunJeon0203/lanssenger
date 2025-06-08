@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>GroupChatWindow</class>
+ <widget class="QWidget" name="GroupChatWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QTextEdit" name="textEdit">
+  <widget class="QTextEdit" name="GCChatDisplay">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -23,7 +23,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="inviteButton">
    <property name="geometry">
     <rect>
      <x>320</x>
@@ -36,7 +36,7 @@
     <string>초대</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit">
+  <widget class="QLineEdit" name="GCMessageInput">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -46,7 +46,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_2">
+  <widget class="QPushButton" name="GCSendButton">
    <property name="geometry">
     <rect>
      <x>320</x>
@@ -57,6 +57,19 @@
    </property>
    <property name="text">
     <string>전송</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="currentRoomLabel">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>20</y>
+     <width>48</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
    </property>
   </widget>
  </widget>

@@ -68,6 +68,7 @@ if(NOT DEFINED BUILD_SERVER_ONLY)
     set(UI_FILES
         src/client/gui/mainwindow.ui
         src/client/gui/createRoom.ui
+        src/client/gui/groupchatwindow.ui
     )
 
     # GUI 클라이언트 실행 파일
@@ -78,10 +79,12 @@ if(NOT DEFINED BUILD_SERVER_ONLY)
         src/client/gui/userlistwindow.cpp
         src/client/gui/createRoom.cpp
         src/client/chat_client.cpp
+        src/client/gui/groupchatwindow.cpp
         include/client/gui/mainwindow.hpp
         include/client/gui/userlistwindow.hpp
         include/client/gui/createRoom.hpp
         include/client/chat_client.hpp
+        include/client/gui/groupchatwindow.hpp
         ${UI_FILES}
     )
 

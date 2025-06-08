@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QLabel" name="label">
+  <widget class="QLabel" name="createRoomlabel">
    <property name="geometry">
     <rect>
      <x>130</x>
@@ -32,7 +32,7 @@
     <number>21</number>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit">
+  <widget class="QLineEdit" name="setRoomName">
    <property name="geometry">
     <rect>
      <x>100</x>
@@ -42,7 +42,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QCheckBox" name="checkBox">
+  <widget class="QCheckBox" name="setCodeCheckBox">
    <property name="geometry">
     <rect>
      <x>100</x>
@@ -55,7 +55,7 @@
     <string>비밀번호</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_2">
+  <widget class="QLineEdit" name="setRoomCode">
    <property name="geometry">
     <rect>
      <x>100</x>
@@ -65,7 +65,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLabel" name="label_2">
+  <widget class="QLabel" name="setRoomNamelabel">
    <property name="geometry">
     <rect>
      <x>100</x>
@@ -78,7 +78,7 @@
     <string>방 이름</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="createRoomButton">
    <property name="geometry">
     <rect>
      <x>150</x>

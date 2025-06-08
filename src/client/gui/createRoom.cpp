@@ -5,9 +5,9 @@ CreateRoomDialog::CreateRoomDialog(QWidget *parent)
     : QDialog(parent), ui(new Ui::Dialog)
 {
     ui->setupUi(this);
-    ui->lineEdit_2->setEnabled(false);
+    ui->setRoomCode->setEnabled(false);
 
-    connect(ui->checkBox, &QCheckBox::checkStateChanged,
+    connect(ui->setCodeCheckBox, &QCheckBox::checkStateChanged,
             this, &CreateRoomDialog::on_checkBox_stateChanged);
 }
 
@@ -16,17 +16,17 @@ CreateRoomDialog::~CreateRoomDialog() {
 }
 
 void CreateRoomDialog::on_checkBox_stateChanged(int state) {
-    ui->lineEdit_2->setEnabled(state == Qt::Checked);
+    ui->setRoomCode->setEnabled(state == Qt::Checked);
 }
 
 QString CreateRoomDialog::getRoomName() const {
-    return ui->lineEdit->text();
+    return ui->setRoomName->text();
 }
 
 QString CreateRoomDialog::getPassword() const {
-    return ui->lineEdit_2->text();
+    return ui->setRoomCode->text();
 }
 
 bool CreateRoomDialog::isPrivate() const {
-    return ui->checkBox->isChecked();
+    return ui->setCodeCheckBox->isChecked();
 }
