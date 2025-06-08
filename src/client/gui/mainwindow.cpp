@@ -114,8 +114,13 @@ void MainWindow::appendMessage(const QString& message) {
     QMetaObject::invokeMethod(this, [this, message]() {
         if (message.startsWith("USER_LIST:")) {
             QStringList users = message.mid(10).split(",", Qt::SkipEmptyParts);
-            QString userList = users.join("\n");
-            QMessageBox::information(this, "유저 목록", userList);
+            if (!userListWindow) {
+                userListWindow = std::make_unique<UserListWindow>(this);
+            }
+            userListWindow->updateUserList(users);
+            userListWindow->show();
+            userListWindow->raise();
+            userListWindow->activateWindow();
         } else if (message.startsWith("ROOM_LIST:")) {
             QStringList rooms = message.mid(10).split(",", Qt::SkipEmptyParts);
             ui->roomListWidget->clear();
@@ -179,8 +184,6 @@ void MainWindow::createNewRoom() {
         groupChatWindow->show();
     }
 }
-
-
 
 void MainWindow::joinSelectedRoom(QListWidgetItem* item) {
     if (!item) return;
