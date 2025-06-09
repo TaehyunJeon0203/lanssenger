@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QWidget>
+#include <QString>
 
 namespace Ui {
 class GroupChatWindow;
@@ -13,18 +14,21 @@ public:
     explicit GroupChatWindow(QWidget *parent = nullptr);
     ~GroupChatWindow();
 
+    void setRoomTitle(const QString& roomName);
     void appendMessage(const QString& msg);
     QString getInputText() const;
-    void setRoomTitle(const QString& roomName);
     QString getRoomTitle() const { return roomTitle; }
 
 signals:
     void sendMessageRequested(const QString& message);
 
 private slots:
-    void onSendButtonClicked();  // 슬롯 이름 이대로 유지
+    void onSendButtonClicked();
 
 private:
+    void loadMessageHistory();
+    void saveMessage(const QString& message);
+
     Ui::GroupChatWindow *ui;
     QString roomTitle;
 };
