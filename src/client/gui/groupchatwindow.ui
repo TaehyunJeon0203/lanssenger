@@ -34,9 +34,9 @@ color: #26313E;
   <widget class="QPushButton" name="inviteButton">
    <property name="geometry">
     <rect>
-     <x>320</x>
-     <y>30</y>
-     <width>81</width>
+     <x>317</x>
+     <y>26</y>
+     <width>80</width>
      <height>30</height>
     </rect>
    </property>
@@ -80,7 +80,7 @@ color: #26313E; </string>
   <widget class="QLabel" name="currentRoomLabel">
    <property name="geometry">
     <rect>
-     <x>140</x>
+     <x>141</x>
      <y>16</y>
      <width>141</width>
      <height>31</height>
