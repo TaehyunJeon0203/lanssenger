@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>411</width>
-    <height>691</height>
+    <width>381</width>
+    <height>690</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,7 +27,7 @@
      <string notr="true">background-color: #C6C1BD</string>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="mainChatWidget">
      <widget class="QTextEdit" name="chatDisplay">
@@ -48,9 +48,9 @@ color: #26313E;
      <widget class="QPushButton" name="sendButton">
       <property name="geometry">
        <rect>
-        <x>290</x>
+        <x>300</x>
         <y>580</y>
-        <width>75</width>
+        <width>70</width>
         <height>41</height>
        </rect>
       </property>
@@ -82,7 +82,7 @@ color: #26313E;
        <rect>
         <x>10</x>
         <y>580</y>
-        <width>270</width>
+        <width>280</width>
         <height>41</height>
        </rect>
       </property>
@@ -95,15 +95,15 @@ color: #26313E;
      <widget class="QLabel" name="currentRoomLabel_2">
       <property name="geometry">
        <rect>
-        <x>129</x>
+        <x>143</x>
         <y>10</y>
-        <width>131</width>
+        <width>111</width>
         <height>31</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <family>궁서</family>
+        <family>휴먼옛체</family>
         <pointsize>16</pointsize>
        </font>
       </property>
@@ -155,7 +155,7 @@ color: #26313E;
       </property>
       <property name="font">
        <font>
-        <family>궁서</family>
+        <family>휴먼옛체</family>
         <pointsize>15</pointsize>
         <bold>false</bold>
        </font>
@@ -186,15 +186,15 @@ color: #26313E;
      <widget class="QLabel" name="currentRoomLabel">
       <property name="geometry">
        <rect>
-        <x>129</x>
+        <x>141</x>
         <y>10</y>
-        <width>131</width>
+        <width>111</width>
         <height>31</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <family>궁서</family>
+        <family>휴먼옛체</family>
         <pointsize>16</pointsize>
        </font>
       </property>
@@ -242,7 +242,7 @@ color: #26313E;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>411</width>
+     <width>381</width>
      <height>33</height>
     </rect>
    </property>
