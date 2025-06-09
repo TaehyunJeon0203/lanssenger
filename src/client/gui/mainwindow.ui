@@ -18,9 +18,9 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>0</y>
-      <width>411</width>
-      <height>731</height>
+      <y>10</y>
+      <width>381</width>
+      <height>721</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -35,7 +35,7 @@
        <rect>
         <x>11</x>
         <y>55</y>
-        <width>391</width>
+        <width>361</width>
         <height>520</height>
        </rect>
       </property>
@@ -48,7 +48,7 @@ color: #26313E;
      <widget class="QPushButton" name="sendButton">
       <property name="geometry">
        <rect>
-        <x>320</x>
+        <x>310</x>
         <y>580</y>
         <width>75</width>
         <height>41</height>
@@ -64,7 +64,7 @@ color: #26313E;
      <widget class="QPushButton" name="groupChatButton">
       <property name="geometry">
        <rect>
-        <x>320</x>
+        <x>290</x>
         <y>15</y>
         <width>80</width>
         <height>30</height>
@@ -82,7 +82,7 @@ color: #26313E;
        <rect>
         <x>10</x>
         <y>580</y>
-        <width>301</width>
+        <width>291</width>
         <height>41</height>
        </rect>
       </property>
@@ -95,7 +95,7 @@ color: #26313E;
      <widget class="QLabel" name="currentRoomLabel_2">
       <property name="geometry">
        <rect>
-        <x>140</x>
+        <x>130</x>
         <y>10</y>
         <width>150</width>
         <height>31</height>
@@ -104,7 +104,7 @@ color: #26313E;
       <property name="font">
        <font>
         <family>궁서</family>
-        <pointsize>17</pointsize>
+        <pointsize>16</pointsize>
        </font>
       </property>
       <property name="text">
