@@ -24,10 +24,10 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: #1C1C1E</string>
+     <string notr="true">background-color: #C6C1BD</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="mainChatWidget">
      <widget class="QTextEdit" name="chatDisplay">
@@ -71,7 +71,7 @@ color: #26313E;
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: 	#2C2C2E</string>
+       <string notr="true">background-color: #9C857B</string>
       </property>
       <property name="text">
        <string>그룹채팅</string>
@@ -90,6 +90,25 @@ color: #26313E;
        <string notr="true">background-color:#F2F2F7;
 color: #26313E; 
 </string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="currentRoomLabel_2">
+      <property name="geometry">
+       <rect>
+        <x>137</x>
+        <y>10</y>
+        <width>150</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>궁서</family>
+        <pointsize>17</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>LANssenger</string>
       </property>
      </widget>
     </widget>
@@ -146,6 +165,25 @@ color: #26313E;
       </property>
       <property name="text">
        <string>유저 목록</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="currentRoomLabel">
+      <property name="geometry">
+       <rect>
+        <x>137</x>
+        <y>10</y>
+        <width>150</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>궁서</family>
+        <pointsize>17</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>LANssenger</string>
       </property>
      </widget>
     </widget>
