@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>411</width>
-    <height>703</height>
+    <height>691</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -61,7 +61,7 @@ color: #26313E;
        <string>전송</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="mainChatButton">
+     <widget class="QPushButton" name="groupChatButton">
       <property name="geometry">
        <rect>
         <x>320</x>
@@ -111,6 +111,22 @@ color: #26313E;
        <string>LANssenger</string>
       </property>
      </widget>
+     <widget class="QPushButton" name="userListButton">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>20</y>
+        <width>80</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: #9C857B</string>
+      </property>
+      <property name="text">
+       <string>유저 목록</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="groupChatWidget">
      <widget class="QListWidget" name="roomListWidget">
@@ -151,7 +167,7 @@ color: #26313E;
        <string>Create Chat</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="userListButton">
+     <widget class="QPushButton" name="userListButton2">
       <property name="geometry">
        <rect>
         <x>320</x>
@@ -184,6 +200,22 @@ color: #26313E;
       </property>
       <property name="text">
        <string>LANssenger</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="mainChatButton_3">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>20</y>
+        <width>80</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: #9C857B</string>
+      </property>
+      <property name="text">
+       <string>그룹채팅</string>
       </property>
      </widget>
     </widget>
