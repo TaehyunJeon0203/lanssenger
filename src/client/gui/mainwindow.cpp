@@ -113,7 +113,21 @@ void MainWindow::sendMessage() {
 
 void MainWindow::appendMessage(const QString& message) {
     QMetaObject::invokeMethod(this, [this, message]() {
-        if (message.startsWith("USER_LIST:")) {
+        if (message.startsWith("ROOM_LIST:")) {
+            QStringList rooms = message.mid(10).split(",", Qt::SkipEmptyParts);
+            ui->roomListWidget->clear();
+            ui->privateRoomListWidget->clear();
+            
+            for (const QString& room : rooms) {
+                if (room.startsWith("PUBLIC:")) {
+                    QString roomName = room.mid(7); // "PUBLIC:" 제거
+                    ui->roomListWidget->addItem(roomName);
+                } else if (room.startsWith("PRIVATE:")) {
+                    QString roomName = room.mid(8); // "PRIVATE:" 제거
+                    ui->privateRoomListWidget->addItem(roomName);
+                }
+            }
+        } else if (message.startsWith("USER_LIST:")) {
             QStringList users = message.mid(10).split(",", Qt::SkipEmptyParts);
             if (!userListWindow) {
                 userListWindow = std::make_unique<UserListWindow>(this);
@@ -122,13 +136,8 @@ void MainWindow::appendMessage(const QString& message) {
             userListWindow->show();
             userListWindow->raise();
             userListWindow->activateWindow();
-        } else if (message.startsWith("ROOM_LIST:")) {
-            QStringList rooms = message.mid(10).split(",", Qt::SkipEmptyParts);
-            ui->roomListWidget->clear();
-            ui->roomListWidget->addItems(rooms);
         } else if (message.startsWith("ROOM_MSG:")) {
-            QString roomMsg = message.mid(9);  // "ROOM_MSG:" 이후의 전체 메시지 (닉네임(IP): 메시지)
-            // 현재 선택된 방의 창에 메시지 전달
+            QString roomMsg = message.mid(9);
             for (const auto& window : groupChatWindows) {
                 if (window->getRoomTitle() == currentRoomName) {
                     window->appendMessage(roomMsg);

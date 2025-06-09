@@ -233,13 +233,22 @@ void Server::handleClientData(const std::string& clientId, const std::string& da
     else if (trimmedData.find("/list_rooms") == 0) {
         std::cout << "[서버] /list_rooms 요청 처리 중!" << std::endl;
 
-        std::vector<std::string> roomList = ChatRoomManager::getInstance().getAllRooms();
+        std::vector<std::string> publicRooms = ChatRoomManager::getInstance().getPublicRooms();
+        std::vector<std::string> privateRooms = ChatRoomManager::getInstance().getPrivateRooms();
 
         std::string response = "ROOM_LIST:";
-        for (const auto& room : roomList) {
-            response += room + ",";
+        
+        // 공개 방 목록 추가
+        for (const auto& room : publicRooms) {
+            response += "PUBLIC:" + room + ",";
         }
-        if (!roomList.empty()) {
+        
+        // 비공개 방 목록 추가
+        for (const auto& room : privateRooms) {
+            response += "PRIVATE:" + room + ",";
+        }
+        
+        if (!publicRooms.empty() || !privateRooms.empty()) {
             response.pop_back(); // 마지막 쉼표 제거
         }
         response += "\n";

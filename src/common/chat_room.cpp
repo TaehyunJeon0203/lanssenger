@@ -107,13 +107,31 @@ std::vector<std::string> ChatRoomManager::getUserRooms(const std::string& userId
 std::vector<std::string> ChatRoomManager::getAllRooms() {
     std::lock_guard<std::mutex> lock(mutex_);
     std::vector<std::string> roomNames;
-
     for (const auto& room : rooms_) {
-        if (!room.second.isPrivate) {  // 공개 방만 반환
+        roomNames.push_back(room.first);
+    }
+    return roomNames;
+}
+
+std::vector<std::string> ChatRoomManager::getPublicRooms() {
+    std::lock_guard<std::mutex> lock(mutex_);
+    std::vector<std::string> roomNames;
+    for (const auto& room : rooms_) {
+        if (!room.second.isPrivate) {
             roomNames.push_back(room.first);
         }
     }
+    return roomNames;
+}
 
+std::vector<std::string> ChatRoomManager::getPrivateRooms() {
+    std::lock_guard<std::mutex> lock(mutex_);
+    std::vector<std::string> roomNames;
+    for (const auto& room : rooms_) {
+        if (room.second.isPrivate) {
+            roomNames.push_back(room.first);
+        }
+    }
     return roomNames;
 }
 

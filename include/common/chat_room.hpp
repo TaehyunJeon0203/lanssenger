@@ -45,6 +45,12 @@ public:
     // 모든 채팅방 목록 조회
     std::vector<std::string> getAllRooms();
 
+    // 공개 채팅방 목록 조회
+    std::vector<std::string> getPublicRooms();
+
+    // 비공개 채팅방 목록 조회
+    std::vector<std::string> getPrivateRooms();
+
     // 채팅방에 메시지 전송
     bool sendMessageToRoom(const std::string& roomName, const std::string& senderId, 
                           const std::string& message);
