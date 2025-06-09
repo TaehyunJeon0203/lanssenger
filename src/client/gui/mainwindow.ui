@@ -202,7 +202,7 @@ color: #26313E;
        <string>LANssenger</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="mainChatButton_3">
+     <widget class="QPushButton" name="mainChatButton">
       <property name="geometry">
        <rect>
         <x>20</x>
