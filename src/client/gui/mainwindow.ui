@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>411</width>
-    <height>690</height>
+    <height>691</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,10 +24,10 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(143, 138, 144)</string>
+     <string notr="true">background-color: #1C1C1E</string>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="mainChatWidget">
      <widget class="QTextEdit" name="chatDisplay">
@@ -40,7 +40,8 @@
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color:#EFEEEE
+       <string notr="true">background-color:#F2F2F7;
+color: #26313E; 
 </string>
       </property>
      </widget>
@@ -54,7 +55,7 @@
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: #9C857B</string>
+       <string notr="true">background-color: #6C5952</string>
       </property>
       <property name="text">
        <string>전송</string>
@@ -70,7 +71,7 @@
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: #9C857B</string>
+       <string notr="true">background-color: 	#2C2C2E</string>
       </property>
       <property name="text">
        <string>그룹채팅</string>
@@ -86,7 +87,7 @@
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color:#EFEEEE;
+       <string notr="true">background-color:#F2F2F7;
 color: #26313E; 
 </string>
       </property>
@@ -103,9 +104,8 @@ color: #26313E;
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color:#EFEEEE;
+       <string notr="true">background-color:#F2F2F7;
 color: #26313E; 
-
 </string>
       </property>
      </widget>
@@ -126,7 +126,7 @@ color: #26313E;
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: #9C857B</string>
+       <string notr="true">background-color: #6C5952</string>
       </property>
       <property name="text">
        <string>방 새로 만들기</string>

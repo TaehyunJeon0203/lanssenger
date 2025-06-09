@@ -14,13 +14,13 @@
    <string>Dialog</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(143, 138, 144)</string>
+   <string notr="true">background-color: #1C1C1E</string>
   </property>
   <widget class="QLabel" name="createRoomlabel">
    <property name="geometry">
     <rect>
-     <x>133</x>
-     <y>10</y>
+     <x>140</x>
+     <y>30</y>
      <width>131</width>
      <height>31</height>
     </rect>
@@ -31,7 +31,7 @@
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgb(143, 138, 144)</string>
+    <string notr="true"/>
    </property>
    <property name="text">
     <string>새 채팅방 만들기</string>
@@ -53,7 +53,7 @@
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color:#EFEEEE;
+    <string notr="true">background-color:#F2F2F7;
 color: #26313E; 
 </string>
    </property>
@@ -81,9 +81,8 @@ color: #26313E;
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color:#EFEEEE;
-color: #26313E; 
-</string>
+    <string notr="true">background-color:#F2F2F7;
+color: #26313E; </string>
    </property>
   </widget>
   <widget class="QLabel" name="setRoomNamelabel">
@@ -109,7 +108,7 @@ color: #26313E;
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: #9C857B</string>
+    <string notr="true">background-color: #6C5952</string>
    </property>
    <property name="text">
     <string>생성</string>

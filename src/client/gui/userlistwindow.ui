@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>300</width>
-    <height>400</height>
+    <height>363</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,8 +20,8 @@
    <item>
     <widget class="QListWidget" name="userListWidget">
      <property name="styleSheet">
-      <string notr="true">background-color:#EFEEEE
-
+      <string notr="true">background-color:#F2F2F7;
+color: #26313E; 
 
 </string>
      </property>
