@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>300</height>
+    <height>286</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
   <widget class="QLabel" name="createRoomlabel">
    <property name="geometry">
     <rect>
-     <x>124</x>
+     <x>120</x>
      <y>30</y>
      <width>151</width>
      <height>31</height>
@@ -27,7 +27,7 @@
    </property>
    <property name="font">
     <font>
-     <family>궁서</family>
+     <family>휴먼옛체</family>
      <pointsize>14</pointsize>
     </font>
    </property>
@@ -48,7 +48,7 @@
    <property name="geometry">
     <rect>
      <x>100</x>
-     <y>110</y>
+     <y>100</y>
      <width>191</width>
      <height>22</height>
     </rect>
@@ -63,7 +63,7 @@ color: #26313E;
    <property name="geometry">
     <rect>
      <x>100</x>
-     <y>150</y>
+     <y>140</y>
      <width>121</width>
      <height>20</height>
     </rect>
@@ -76,7 +76,7 @@ color: #26313E;
    <property name="geometry">
     <rect>
      <x>100</x>
-     <y>180</y>
+     <y>160</y>
      <width>201</width>
      <height>22</height>
     </rect>
@@ -90,7 +90,7 @@ color: #26313E; </string>
    <property name="geometry">
     <rect>
      <x>100</x>
-     <y>90</y>
+     <y>80</y>
      <width>48</width>
      <height>16</height>
     </rect>
@@ -102,11 +102,16 @@ color: #26313E; </string>
   <widget class="QPushButton" name="createRoomButton">
    <property name="geometry">
     <rect>
-     <x>157</x>
-     <y>230</y>
+     <x>150</x>
+     <y>220</y>
      <width>80</width>
      <height>30</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>휴먼옛체</family>
+    </font>
    </property>
    <property name="styleSheet">
     <string notr="true">background-color: #6C5952</string>
