@@ -31,7 +31,7 @@ public:
 
     // 채팅방 참여
     bool joinRoom(const std::string& roomName, const std::string& userId, 
-                 const std::string& password = "");
+                 const std::string& password);
 
     // 채팅방 퇴장
     bool leaveRoom(const std::string& roomName, const std::string& userId);
