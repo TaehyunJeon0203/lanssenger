@@ -12,6 +12,7 @@
 #include "client/chat_client.hpp"
 #include "client/gui/groupchatwindow.hpp"
 #include <memory>
+#include <QTimer>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -20,6 +21,16 @@ MainWindow::MainWindow(QWidget *parent)
     setupMenuBar();
     setupConnections();
     connectToServer();
+
+    // 초기 화면을 전체 채팅방으로 설정
+    ui->stackedWidget->setCurrentWidget(ui->mainChatWidget);
+
+    // 서버 연결 후 잠시 대기했다가 방 목록 요청
+    QTimer::singleShot(1000, this, [this]() {
+        if (chatClient) {
+            chatClient->sendMessage("/list_rooms");
+        }
+    });
 }
 
 MainWindow::~MainWindow() {
@@ -185,10 +196,12 @@ void MainWindow::createNewRoom() {
         currentRoomName = roomName;
         chatClient->sendMessage(command.toStdString());
 
-        // ✅ 새로 생성한 방 목록 요청
-        chatClient->sendMessage("/list_rooms");
+        // 방 생성 후 잠시 대기했다가 방 목록 새로고침
+        QTimer::singleShot(500, this, [this]() {
+            chatClient->sendMessage("/list_rooms");
+        });
 
-        // ✅ 새 창 열기
+        // 새 창 열기
         auto newGroupChatWindow = std::make_unique<GroupChatWindow>(this);
         connect(newGroupChatWindow.get(), &GroupChatWindow::sendMessageRequested, this, &MainWindow::sendGroupMessage);
         newGroupChatWindow->setRoomTitle(roomName);
