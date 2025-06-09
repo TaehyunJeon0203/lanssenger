@@ -103,7 +103,7 @@ color: #26313E;
       </property>
       <property name="font">
        <font>
-        <family>휴먼옛체</family>
+        <family>Noto Sans KR</family>
         <pointsize>16</pointsize>
        </font>
       </property>
@@ -155,7 +155,7 @@ color: #26313E;
       </property>
       <property name="font">
        <font>
-        <family>휴먼옛체</family>
+        <family>Noto Sans KR</family>
         <pointsize>15</pointsize>
         <bold>false</bold>
        </font>
@@ -194,7 +194,7 @@ color: #26313E;
       </property>
       <property name="font">
        <font>
-        <family>휴먼옛체</family>
+        <family>Noto Sans KR</family>
         <pointsize>16</pointsize>
        </font>
       </property>

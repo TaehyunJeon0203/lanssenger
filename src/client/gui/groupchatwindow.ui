@@ -88,7 +88,7 @@ color: #26313E; </string>
    </property>
    <property name="font">
     <font>
-     <family>휴먼옛체</family>
+     <family>Noto Sans KR</family>
      <pointsize>16</pointsize>
     </font>
    </property>
