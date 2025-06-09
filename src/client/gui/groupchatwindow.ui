@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>384</width>
-    <height>626</height>
+    <height>635</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -80,9 +80,9 @@ color: #26313E; </string>
   <widget class="QLabel" name="currentRoomLabel">
    <property name="geometry">
     <rect>
-     <x>110</x>
+     <x>10</x>
      <y>10</y>
-     <width>141</width>
+     <width>271</width>
      <height>31</height>
     </rect>
    </property>
