@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>411</width>
-    <height>691</height>
+    <height>703</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -61,7 +61,7 @@ color: #26313E;
        <string>전송</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="groupChatButton">
+     <widget class="QPushButton" name="mainChatButton">
       <property name="geometry">
        <rect>
         <x>320</x>
@@ -139,8 +139,8 @@ color: #26313E;
       </property>
       <property name="font">
        <font>
-        <family>맑은 고딕</family>
-        <pointsize>10</pointsize>
+        <family>궁서</family>
+        <pointsize>16</pointsize>
         <bold>false</bold>
        </font>
       </property>
@@ -148,10 +148,10 @@ color: #26313E;
        <string notr="true">background-color: #6C5952</string>
       </property>
       <property name="text">
-       <string>방 새로 만들기</string>
+       <string>Create Chat</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="userListButton2">
+     <widget class="QPushButton" name="userListButton">
       <property name="geometry">
        <rect>
         <x>320</x>
