@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>407</width>
-    <height>687</height>
+    <width>384</width>
+    <height>626</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,10 +19,10 @@
   <widget class="QTextEdit" name="GCChatDisplay">
    <property name="geometry">
     <rect>
-     <x>9</x>
-     <y>67</y>
-     <width>391</width>
-     <height>561</height>
+     <x>10</x>
+     <y>55</y>
+     <width>361</width>
+     <height>520</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -34,8 +34,8 @@ color: #26313E;
   <widget class="QPushButton" name="inviteButton">
    <property name="geometry">
     <rect>
-     <x>317</x>
-     <y>26</y>
+     <x>287</x>
+     <y>16</y>
      <width>80</width>
      <height>30</height>
     </rect>
@@ -51,8 +51,8 @@ color: #26313E;
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>634</y>
-     <width>301</width>
+     <y>580</y>
+     <width>270</width>
      <height>41</height>
     </rect>
    </property>
@@ -64,9 +64,9 @@ color: #26313E; </string>
   <widget class="QPushButton" name="GCSendButton">
    <property name="geometry">
     <rect>
-     <x>320</x>
-     <y>634</y>
-     <width>75</width>
+     <x>290</x>
+     <y>580</y>
+     <width>71</width>
      <height>41</height>
     </rect>
    </property>
@@ -80,8 +80,8 @@ color: #26313E; </string>
   <widget class="QLabel" name="currentRoomLabel">
    <property name="geometry">
     <rect>
-     <x>141</x>
-     <y>16</y>
+     <x>120</x>
+     <y>10</y>
      <width>141</width>
      <height>31</height>
     </rect>
@@ -89,7 +89,7 @@ color: #26313E; </string>
    <property name="font">
     <font>
      <family>궁서</family>
-     <pointsize>17</pointsize>
+     <pointsize>16</pointsize>
     </font>
    </property>
    <property name="text">
