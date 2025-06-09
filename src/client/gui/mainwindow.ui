@@ -129,44 +129,6 @@ color: #26313E;
      </widget>
     </widget>
     <widget class="QWidget" name="groupChatWidget">
-     <widget class="QListWidget" name="roomListWidget">
-      <property name="geometry">
-       <rect>
-        <x>11</x>
-        <y>55</y>
-        <width>361</width>
-        <height>510</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color:#F2F2F7;
-color: #26313E; 
-</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="createRoomButton">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>573</y>
-        <width>361</width>
-        <height>51</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Noto Sans KR</family>
-        <pointsize>15</pointsize>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color: #6C5952</string>
-      </property>
-      <property name="text">
-       <string>Create Chat</string>
-      </property>
-     </widget>
      <widget class="QPushButton" name="userListButton2">
       <property name="geometry">
        <rect>
@@ -216,6 +178,85 @@ color: #26313E;
       </property>
       <property name="text">
        <string>전체채팅</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="publicRoomLabel">
+      <property name="geometry">
+       <rect>
+        <x>11</x>
+        <y>50</y>
+        <width>175</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>공개 채팅방</string>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="roomListWidget">
+      <property name="geometry">
+       <rect>
+        <x>11</x>
+        <y>75</y>
+        <width>361</width>
+        <height>200</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color:#F2F2F7;
+color: #26313E; 
+</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="privateRoomLabel">
+      <property name="geometry">
+       <rect>
+        <x>11</x>
+        <y>285</y>
+        <width>175</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>비공개 채팅방</string>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="privateRoomListWidget">
+      <property name="geometry">
+       <rect>
+        <x>11</x>
+        <y>310</y>
+        <width>361</width>
+        <height>200</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color:#F2F2F7;
+color: #26313E; 
+</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="createRoomButton">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>520</y>
+        <width>361</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Noto Sans KR</family>
+        <pointsize>15</pointsize>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: #6C5952</string>
+      </property>
+      <property name="text">
+       <string>Create Chat</string>
       </property>
      </widget>
     </widget>
