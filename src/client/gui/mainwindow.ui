@@ -186,15 +186,15 @@ color: #26313E;
      <widget class="QLabel" name="currentRoomLabel">
       <property name="geometry">
        <rect>
-        <x>129</x>
+        <x>141</x>
         <y>10</y>
-        <width>131</width>
+        <width>111</width>
         <height>31</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <family>궁서</family>
+        <family>휴먼옛체</family>
         <pointsize>16</pointsize>
        </font>
       </property>
