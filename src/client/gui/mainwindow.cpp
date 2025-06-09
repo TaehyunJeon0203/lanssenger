@@ -62,6 +62,7 @@ void MainWindow::setupConnections() {
     connect(ui->userListButton2, &QPushButton::clicked, this, &MainWindow::requestUserList);
     connect(ui->mainChatButton, &QPushButton::clicked, this, &MainWindow::showMainChat);
     connect(ui->roomListWidget, &QListWidget::itemClicked, this, &MainWindow::joinSelectedRoom);
+    connect(ui->privateRoomListWidget, &QListWidget::itemClicked, this, &MainWindow::joinSelectedPrivateRoom);
 }
 
 void MainWindow::connectToServer() {
@@ -220,7 +221,6 @@ void MainWindow::joinSelectedRoom() {
         // 이미 열려있는 창이 있는지 확인
         for (const auto& window : groupChatWindows) {
             if (window->getRoomTitle() == roomName) {
-                // 이미 열려있는 창이 있으면 해당 창을 활성화
                 window->show();
                 window->raise();
                 window->activateWindow();
@@ -234,6 +234,39 @@ void MainWindow::joinSelectedRoom() {
         newGroupChatWindow->setRoomTitle(roomName);
         newGroupChatWindow->show();
         groupChatWindows.push_back(std::move(newGroupChatWindow));
+    }
+}
+
+void MainWindow::joinSelectedPrivateRoom() {
+    QListWidgetItem* selectedItem = ui->privateRoomListWidget->currentItem();
+    if (selectedItem) {
+        QString roomName = selectedItem->text();
+        bool ok;
+        QString password = QInputDialog::getText(this, "비밀번호 입력",
+            "비공개 방 비밀번호를 입력하세요:", QLineEdit::Password, "", &ok);
+        
+        if (ok && !password.isEmpty()) {
+            currentRoomName = roomName;
+            QString command = QString("/join_room %1 --password %2").arg(roomName).arg(password);
+            chatClient->sendMessage(command.toStdString());
+
+            // 이미 열려있는 창이 있는지 확인
+            for (const auto& window : groupChatWindows) {
+                if (window->getRoomTitle() == roomName) {
+                    window->show();
+                    window->raise();
+                    window->activateWindow();
+                    return;
+                }
+            }
+
+            // 열려있는 창이 없으면 새로 생성
+            auto newGroupChatWindow = std::make_unique<GroupChatWindow>(this);
+            connect(newGroupChatWindow.get(), &GroupChatWindow::sendMessageRequested, this, &MainWindow::sendGroupMessage);
+            newGroupChatWindow->setRoomTitle(roomName);
+            newGroupChatWindow->show();
+            groupChatWindows.push_back(std::move(newGroupChatWindow));
+        }
     }
 }
 
