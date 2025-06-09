@@ -170,7 +170,7 @@ color: #26313E;
      <widget class="QPushButton" name="userListButton2">
       <property name="geometry">
        <rect>
-        <x>320</x>
+        <x>20</x>
         <y>20</y>
         <width>80</width>
         <height>30</height>
@@ -205,7 +205,7 @@ color: #26313E;
      <widget class="QPushButton" name="mainChatButton">
       <property name="geometry">
        <rect>
-        <x>20</x>
+        <x>320</x>
         <y>20</y>
         <width>80</width>
         <height>30</height>
@@ -215,7 +215,7 @@ color: #26313E;
        <string notr="true">background-color: #9C857B</string>
       </property>
       <property name="text">
-       <string>그룹채팅</string>
+       <string>전체채팅</string>
       </property>
      </widget>
     </widget>

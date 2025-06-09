@@ -102,17 +102,17 @@ color: #26313E; </string>
   <widget class="QPushButton" name="createRoomButton">
    <property name="geometry">
     <rect>
-     <x>150</x>
-     <y>240</y>
-     <width>75</width>
-     <height>24</height>
+     <x>157</x>
+     <y>230</y>
+     <width>80</width>
+     <height>30</height>
     </rect>
    </property>
    <property name="styleSheet">
     <string notr="true">background-color: #6C5952</string>
    </property>
    <property name="text">
-    <string>생성</string>
+    <string>create</string>
    </property>
   </widget>
  </widget>
