@@ -80,7 +80,7 @@ color: #26313E; </string>
   <widget class="QLabel" name="currentRoomLabel">
    <property name="geometry">
     <rect>
-     <x>139</x>
+     <x>136</x>
      <y>10</y>
      <width>111</width>
      <height>31</height>
