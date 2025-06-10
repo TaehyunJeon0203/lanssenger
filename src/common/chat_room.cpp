@@ -9,8 +9,7 @@ ChatRoomManager& ChatRoomManager::getInstance() {
     return instance;
 }
 
-bool ChatRoomManager::createRoom(const std::string& roomName, const std::string& creatorId,
-                               bool isPrivate, const std::string& password) {
+bool ChatRoomManager::createRoom(const std::string& roomName, bool isPrivate, const std::string& password) {
     std::lock_guard<std::mutex> lock(mutex_);
     
     // 이미 존재하는 방 이름인지 확인
@@ -21,10 +20,8 @@ bool ChatRoomManager::createRoom(const std::string& roomName, const std::string&
     // 새 채팅방 생성
     ChatRoomInfo newRoom;
     newRoom.name = roomName;
-    newRoom.creator = creatorId;
     newRoom.isPrivate = isPrivate;
     newRoom.password = password;
-    newRoom.members.insert(creatorId);
 
     rooms_[roomName] = newRoom;
     return true;
@@ -81,12 +78,6 @@ bool ChatRoomManager::leaveRoom(const std::string& roomName, const std::string& 
     }
 
     it->second.members.erase(userId);
-
-    // 방장이 나간 경우 방 삭제
-    if (it->second.creator == userId) {
-        rooms_.erase(it);
-    }
-
     return true;
 }
 

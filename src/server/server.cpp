@@ -221,11 +221,7 @@ void Server::handleClientData(const std::string& clientId, const std::string& da
             else if (opt == "--password") iss >> password;
         }
 
-        std::string creatorNickname = ActiveUsersManager::getInstance().isUserActive(clientId)
-            ? ActiveUsersManager::getInstance().getAllActiveUsers()[clientId].nickname
-            : clientId;
-
-        bool created = ChatRoomManager::getInstance().createRoom(roomName, creatorNickname, isPrivate, password);
+        bool created = ChatRoomManager::getInstance().createRoom(roomName, isPrivate, password);
 
         std::string response = created
             ? "채팅방 [" + roomName + "] 생성 완료\n"

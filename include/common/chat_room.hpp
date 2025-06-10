@@ -12,7 +12,6 @@ namespace lanssenger {
 // 채팅방 정보를 담는 구조체
 struct ChatRoomInfo {
     std::string name;           // 채팅방 이름
-    std::string creator;        // 생성자 ID
     std::unordered_set<std::string> members;  // 참여자 ID 목록
     bool isPrivate;            // 비공개 방 여부
     std::string password;      // 비공개 방 비밀번호 (비공개 방인 경우에만 사용)
@@ -23,8 +22,7 @@ public:
     static ChatRoomManager& getInstance();
 
     // 채팅방 생성
-    bool createRoom(const std::string& roomName, const std::string& creatorId, 
-                   bool isPrivate = false, const std::string& password = "");
+    bool createRoom(const std::string& roomName, bool isPrivate = false, const std::string& password = "");
 
     // 채팅방 삭제
     bool deleteRoom(const std::string& roomName);
