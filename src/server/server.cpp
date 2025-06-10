@@ -2,6 +2,12 @@
 #include "common/chat_room.hpp"
 #include <iostream>
 
+inline std::string trim(const std::string& s) {
+    size_t start = s.find_first_not_of(" \t\r\n");
+    size_t end = s.find_last_not_of(" \t\r\n");
+    return (start == std::string::npos) ? "" : s.substr(start, end - start + 1);
+}
+
 namespace lanssenger {
 
 Server::Server()
@@ -233,13 +239,22 @@ void Server::handleClientData(const std::string& clientId, const std::string& da
     else if (trimmedData.find("/list_rooms") == 0) {
         std::cout << "[서버] /list_rooms 요청 처리 중!" << std::endl;
 
-        std::vector<std::string> roomList = ChatRoomManager::getInstance().getAllRooms();
+        std::vector<std::string> publicRooms = ChatRoomManager::getInstance().getPublicRooms();
+        std::vector<std::string> privateRooms = ChatRoomManager::getInstance().getPrivateRooms();
 
         std::string response = "ROOM_LIST:";
-        for (const auto& room : roomList) {
-            response += room + ",";
+        
+        // 공개 방 목록 추가
+        for (const auto& room : publicRooms) {
+            response += "PUBLIC:" + room + ",";
         }
-        if (!roomList.empty()) {
+        
+        // 비공개 방 목록 추가
+        for (const auto& room : privateRooms) {
+            response += "PRIVATE:" + room + ",";
+        }
+        
+        if (!publicRooms.empty() || !privateRooms.empty()) {
             response.pop_back(); // 마지막 쉼표 제거
         }
         response += "\n";
@@ -254,20 +269,6 @@ void Server::handleClientData(const std::string& clientId, const std::string& da
             } else {
                 std::cout << "[서버] 방 목록 전송 완료" << std::endl;
             }
-        }
-    }
-    else if (trimmedData.find("/join_room ") == 0) {
-        std::string roomName = trimmedData.substr(11);
-        std::cout << "[서버] 방 참여 요청: " << roomName << std::endl;
-
-        bool joined = ChatRoomManager::getInstance().joinRoom(roomName, clientId);
-        std::string response = joined
-            ? "채팅방 [" + roomName + "] 참여 완료\n"
-            : "채팅방 참여 실패: 방이 존재하지 않거나 이미 참여 중입니다\n";
-
-        auto socket = clients_[clientId];
-        if (socket && socket->is_open()) {
-            boost::asio::write(*socket, boost::asio::buffer(response + "\n"));
         }
     }
     else if (trimmedData.find("/room_msg ") == 0) {
@@ -307,6 +308,63 @@ void Server::handleClientData(const std::string& clientId, const std::string& da
                     }
                 }
             }
+        }
+    }
+    else if (trimmedData.find("/room_users ") == 0) {
+        std::string roomName = trimmedData.substr(12);
+        auto* roomInfo = ChatRoomManager::getInstance().getRoomInfo(roomName);
+        if (roomInfo) {
+            std::string response = "ROOM_USER_LIST:";
+            for (const auto& userId : roomInfo->members) {
+                const auto& activeUsers = ActiveUsersManager::getInstance().getAllActiveUsers();
+                auto it = activeUsers.find(userId);
+                if (it != activeUsers.end()) {
+                  response += it->second.nickname + "(" + it->second.ipLastThree + "),";
+              }
+         }
+         if (!response.empty() && response.back() == ',') {
+             response.pop_back();
+            }
+            response += "\n";
+
+         auto socket = clients_[clientId];
+            if (socket && socket->is_open()) {
+              boost::asio::write(*socket, boost::asio::buffer(response));
+            }
+        }
+    }
+    else if (trimmedData.find("/join_room ") == 0) {
+        std::string raw = trimmedData.substr(11);  // "/join_room " 이후 문자열
+        std::string roomName;
+        std::string password;
+
+        size_t pwPos = raw.find("--password");
+        if (pwPos != std::string::npos) {
+            roomName = raw.substr(0, pwPos);
+            password = raw.substr(pwPos + 12);  // 길이: " --password " == 12
+        } else {
+            roomName = raw;
+            password = "";  // 공백이거나 공개방
+        }
+
+        roomName = trim(roomName);
+        password = trim(password);
+
+        std::cout << "[서버] 방 참여 요청: [" << roomName << "] (password: [" << password << "])\n";
+
+        std::string nickname = ActiveUsersManager::getInstance().isUserActive(clientId)
+            ? ActiveUsersManager::getInstance().getAllActiveUsers().at(clientId).nickname
+            : clientId;
+
+        bool joined = ChatRoomManager::getInstance().joinRoom(roomName, nickname, password);
+
+        std::string response = joined
+            ? "채팅방 [" + roomName + "] 참여 완료\n"
+            : "채팅방 참여 실패: 비밀번호가 틀렸거나 방이 존재하지 않습니다\n";
+
+        auto socket = clients_[clientId];
+        if (socket && socket->is_open()) {
+            boost::asio::write(*socket, boost::asio::buffer(response));
         }
     }
     else {

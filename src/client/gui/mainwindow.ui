@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>381</width>
-    <height>690</height>
+    <height>634</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>10</y>
+      <y>0</y>
       <width>381</width>
       <height>721</height>
      </rect>
@@ -27,16 +27,16 @@
      <string notr="true">background-color: #C6C1BD</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="mainChatWidget">
      <widget class="QTextEdit" name="chatDisplay">
       <property name="geometry">
        <rect>
-        <x>11</x>
+        <x>12</x>
         <y>55</y>
-        <width>361</width>
-        <height>520</height>
+        <width>355</width>
+        <height>481</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -49,7 +49,7 @@ color: #26313E;
       <property name="geometry">
        <rect>
         <x>300</x>
-        <y>580</y>
+        <y>540</y>
         <width>70</width>
         <height>41</height>
        </rect>
@@ -81,7 +81,7 @@ color: #26313E;
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>580</y>
+        <y>540</y>
         <width>280</width>
         <height>41</height>
        </rect>
@@ -95,15 +95,19 @@ color: #26313E;
      <widget class="QLabel" name="currentRoomLabel_2">
       <property name="geometry">
        <rect>
+<<<<<<< HEAD
         <x>140</x>
+=======
+        <x>130</x>
+>>>>>>> 695891056c2ee1a060e0cf12c66bd3cc8c3e875b
         <y>10</y>
-        <width>111</width>
+        <width>121</width>
         <height>31</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <family>휴먼옛체</family>
+        <family>Noto Sans KR</family>
         <pointsize>16</pointsize>
        </font>
       </property>
@@ -114,7 +118,11 @@ color: #26313E;
      <widget class="QPushButton" name="userListButton">
       <property name="geometry">
        <rect>
+<<<<<<< HEAD
         <x>17</x>
+=======
+        <x>12</x>
+>>>>>>> 695891056c2ee1a060e0cf12c66bd3cc8c3e875b
         <y>15</y>
         <width>80</width>
         <height>30</height>
@@ -129,44 +137,6 @@ color: #26313E;
      </widget>
     </widget>
     <widget class="QWidget" name="groupChatWidget">
-     <widget class="QListWidget" name="roomListWidget">
-      <property name="geometry">
-       <rect>
-        <x>11</x>
-        <y>55</y>
-        <width>361</width>
-        <height>510</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color:#F2F2F7;
-color: #26313E; 
-</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="createRoomButton">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>573</y>
-        <width>361</width>
-        <height>51</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>휴먼옛체</family>
-        <pointsize>15</pointsize>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color: #6C5952</string>
-      </property>
-      <property name="text">
-       <string>Create Chat</string>
-      </property>
-     </widget>
      <widget class="QPushButton" name="userListButton2">
       <property name="geometry">
        <rect>
@@ -188,13 +158,13 @@ color: #26313E;
        <rect>
         <x>140</x>
         <y>10</y>
-        <width>111</width>
+        <width>131</width>
         <height>31</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <family>휴먼옛체</family>
+        <family>Noto Sans KR</family>
         <pointsize>16</pointsize>
        </font>
       </property>
@@ -216,6 +186,85 @@ color: #26313E;
       </property>
       <property name="text">
        <string>전체채팅</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="publicRoomLabel">
+      <property name="geometry">
+       <rect>
+        <x>11</x>
+        <y>50</y>
+        <width>175</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>공개 채팅방</string>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="roomListWidget">
+      <property name="geometry">
+       <rect>
+        <x>11</x>
+        <y>75</y>
+        <width>361</width>
+        <height>200</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color:#F2F2F7;
+color: #26313E; 
+</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="privateRoomLabel">
+      <property name="geometry">
+       <rect>
+        <x>11</x>
+        <y>285</y>
+        <width>175</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>비공개 채팅방</string>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="privateRoomListWidget">
+      <property name="geometry">
+       <rect>
+        <x>11</x>
+        <y>310</y>
+        <width>361</width>
+        <height>200</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color:#F2F2F7;
+color: #26313E; 
+</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="createRoomButton">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>520</y>
+        <width>361</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Noto Sans KR</family>
+        <pointsize>15</pointsize>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: #6C5952</string>
+      </property>
+      <property name="text">
+       <string>Create Chat</string>
       </property>
      </widget>
     </widget>
@@ -243,21 +292,9 @@ color: #26313E;
      <x>0</x>
      <y>0</y>
      <width>381</width>
-     <height>33</height>
+     <height>22</height>
     </rect>
    </property>
-   <widget class="QMenu" name="groupChatMenu">
-    <property name="title">
-     <string>그룹채팅</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="userListMenu">
-    <property name="title">
-     <string>유저목록</string>
-    </property>
-   </widget>
-   <addaction name="groupChatMenu"/>
-   <addaction name="userListMenu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

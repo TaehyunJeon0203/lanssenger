@@ -1,5 +1,6 @@
 #include "client/gui/groupchatwindow.hpp"
 #include "ui_groupchatwindow.h"
+#include "client/gui/userlistwindow.hpp"
 #include <QPoint>
 #include <QFile>
 #include <QTextStream>
@@ -23,6 +24,7 @@ GroupChatWindow::GroupChatWindow(QWidget *parent)
 
     connect(ui->GCSendButton, &QPushButton::clicked, this, &GroupChatWindow::onSendButtonClicked);
     connect(ui->GCMessageInput, &QLineEdit::returnPressed, this, &GroupChatWindow::onSendButtonClicked);
+    connect(ui->GCUserListButton, &QPushButton::clicked, this, &GroupChatWindow::onUserListButtonClicked);
 }
 
 GroupChatWindow::~GroupChatWindow() {
@@ -76,4 +78,30 @@ void GroupChatWindow::onSendButtonClicked() {
         emit sendMessageRequested(msg);
         ui->GCMessageInput->clear();
     }
+}
+
+void GroupChatWindow::onUserListButtonClicked() {
+    if (!roomTitle.isEmpty()) {
+        emit requestRoomUserList(roomTitle);  // MainWindow에서 /room_users 요청
+
+        if (!userListWindow) {
+            userListWindow = std::make_unique<UserListWindow>(this);
+        }
+
+        // 나중에 updateUserList로 갱신
+        userListWindow->show();
+        userListWindow->raise();
+        userListWindow->activateWindow();
+    }
+}
+
+// ✅ 새로운 함수 추가
+void GroupChatWindow::updateUserList(const QStringList& users) {
+    if (!userListWindow) {
+        userListWindow = std::make_unique<UserListWindow>(this);
+    }
+    userListWindow->updateUserList(users);
+    userListWindow->show();
+    userListWindow->raise();
+    userListWindow->activateWindow();
 }
