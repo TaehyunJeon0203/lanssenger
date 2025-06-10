@@ -307,26 +307,35 @@ void Server::handleClientData(const std::string& clientId, const std::string& da
         }
     }
     else if (trimmedData.find("/room_users ") == 0) {
-        std::string roomName = trimmedData.substr(12);
+        std::string roomName = trimmedData.substr(11);
+        roomName = trim(roomName);
+        std::cout << "[서버] 방 사용자 목록 요청: [" << roomName << "]" << std::endl;
+        
         auto* roomInfo = ChatRoomManager::getInstance().getRoomInfo(roomName);
         if (roomInfo) {
             std::string response = "ROOM_USER_LIST:";
+            bool hasUsers = false;
             for (const auto& userId : roomInfo->members) {
                 const auto& activeUsers = ActiveUsersManager::getInstance().getAllActiveUsers();
                 auto it = activeUsers.find(userId);
                 if (it != activeUsers.end()) {
-                  response += it->second.nickname + "(" + it->second.ipLastThree + "),";
-              }
-         }
-         if (!response.empty() && response.back() == ',') {
-             response.pop_back();
+                    response += it->second.nickname + "(" + it->second.ipLastThree + "),";
+                    hasUsers = true;
+                }
+            }
+            if (hasUsers) {
+                response.pop_back(); // 마지막 쉼표 제거
             }
             response += "\n";
 
-         auto socket = clients_[clientId];
+            std::cout << "[서버] 방 사용자 목록 응답: [" << response << "]" << std::endl;
+
+            auto socket = clients_[clientId];
             if (socket && socket->is_open()) {
-              boost::asio::write(*socket, boost::asio::buffer(response));
+                boost::asio::write(*socket, boost::asio::buffer(response));
             }
+        } else {
+            std::cout << "[서버] 방을 찾을 수 없음: [" << roomName << "]" << std::endl;
         }
     }
     else if (trimmedData.find("/join_room ") == 0) {
@@ -348,11 +357,7 @@ void Server::handleClientData(const std::string& clientId, const std::string& da
 
         std::cout << "[서버] 방 참여 요청: [" << roomName << "] (password: [" << password << "])\n";
 
-        std::string nickname = ActiveUsersManager::getInstance().isUserActive(clientId)
-            ? ActiveUsersManager::getInstance().getAllActiveUsers().at(clientId).nickname
-            : clientId;
-
-        bool joined = ChatRoomManager::getInstance().joinRoom(roomName, nickname, password);
+        bool joined = ChatRoomManager::getInstance().joinRoom(roomName, clientId, password);
 
         std::string response = joined
             ? "채팅방 [" + roomName + "] 참여 완료\n"

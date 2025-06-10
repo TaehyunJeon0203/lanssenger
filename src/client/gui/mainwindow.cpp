@@ -139,6 +139,16 @@ void MainWindow::appendMessage(const QString& message) {
                     ui->privateRoomListWidget->addItem(roomName);
                 }
             }
+        } else if (message.startsWith("ROOM_USER_LIST:")) {
+            QStringList users = message.mid(15).split(",", Qt::SkipEmptyParts);
+            
+            // 현재 열려 있는 그룹채팅 창 중 roomTitle이 같은 창 찾아서 updateUserList 호출
+            for (const auto& window : groupChatWindows) {
+                if (window->getRoomTitle() == currentRoomName) {
+                    window->updateUserList(users);
+                    break;
+                }
+            }
         } else if (message.startsWith("USER_LIST:")) {
             QStringList users = message.mid(10).split(",", Qt::SkipEmptyParts);
             if (!userListWindow) {
@@ -153,16 +163,6 @@ void MainWindow::appendMessage(const QString& message) {
             for (const auto& window : groupChatWindows) {
                 if (window->getRoomTitle() == currentRoomName) {
                     window->appendMessage(roomMsg);
-                    break;
-                }
-            }
-        } else if (message.startsWith("ROOM_USER_LIST:")) {
-            QStringList users = message.mid(15).split(",", Qt::SkipEmptyParts);
-            
-            // 현재 열려 있는 그룹채팅 창 중 roomTitle이 같은 창 찾아서 updateUserList 호출
-            for (const auto& window : groupChatWindows) {
-                if (window->getRoomTitle() == currentRoomName) {
-                    window->updateUserList(users);
                     break;
                 }
             }

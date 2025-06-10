@@ -89,17 +89,17 @@ void GroupChatWindow::onUserListButtonClicked() {
             userListWindow->setTitle("대화 상대");
         }
 
-        // 나중에 updateUserList로 갱신
+        // 사용자 목록 창을 먼저 표시
         userListWindow->show();
         userListWindow->raise();
         userListWindow->activateWindow();
     }
 }
 
-// ✅ 새로운 함수 추가
 void GroupChatWindow::updateUserList(const QStringList& users) {
     if (!userListWindow) {
         userListWindow = std::make_unique<UserListWindow>(this);
+        userListWindow->setTitle("대화 상대");
     }
     userListWindow->updateUserList(users);
     userListWindow->show();

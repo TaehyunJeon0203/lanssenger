@@ -24,7 +24,11 @@ UserListWindow::~UserListWindow() {
 
 void UserListWindow::updateUserList(const QStringList& users) {
     ui->userListWidget->clear();
-    ui->userListWidget->addItems(users);
+    for (const QString& user : users) {
+        if (!user.isEmpty()) {
+            ui->userListWidget->addItem(user);
+        }
+    }
 }
 
 void UserListWindow::setTitle(const QString& title) {
