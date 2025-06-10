@@ -95,11 +95,8 @@ color: #26313E;
      <widget class="QLabel" name="currentRoomLabel_2">
       <property name="geometry">
        <rect>
-<<<<<<< HEAD
         <x>140</x>
-=======
         <x>130</x>
->>>>>>> 695891056c2ee1a060e0cf12c66bd3cc8c3e875b
         <y>10</y>
         <width>121</width>
         <height>31</height>
@@ -118,11 +115,8 @@ color: #26313E;
      <widget class="QPushButton" name="userListButton">
       <property name="geometry">
        <rect>
-<<<<<<< HEAD
         <x>17</x>
-=======
         <x>12</x>
->>>>>>> 695891056c2ee1a060e0cf12c66bd3cc8c3e875b
         <y>15</y>
         <width>80</width>
         <height>30</height>
