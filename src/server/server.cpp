@@ -346,7 +346,8 @@ void Server::handleClientData(const std::string& clientId, const std::string& da
         size_t pwPos = raw.find("--password");
         if (pwPos != std::string::npos) {
             roomName = raw.substr(0, pwPos);
-            password = raw.substr(pwPos + 12);  // 길이: " --password " == 12
+            password = raw.substr(pwPos + 10);  // "--password"는 10글자
+            password = trim(password);
         } else {
             roomName = raw;
             password = "";  // 공백이거나 공개방
@@ -362,6 +363,23 @@ void Server::handleClientData(const std::string& clientId, const std::string& da
         std::string response = joined
             ? "채팅방 [" + roomName + "] 참여 완료\n"
             : "채팅방 참여 실패: 비밀번호가 틀렸거나 방이 존재하지 않습니다\n";
+
+        auto socket = clients_[clientId];
+        if (socket && socket->is_open()) {
+            boost::asio::write(*socket, boost::asio::buffer(response));
+        }
+    }
+    else if (trimmedData.find("/leave_room ") == 0) {
+        std::string roomName = trimmedData.substr(11);  // "/leave_room " 이후 문자열
+        roomName = trim(roomName);
+
+        std::cout << "[서버] 방 퇴장 요청: [" << roomName << "] from [" << clientId << "]\n";
+
+        bool left = ChatRoomManager::getInstance().leaveRoom(roomName, clientId);
+
+        std::string response = left
+            ? "채팅방 [" + roomName + "] 퇴장 완료\n"
+            : "채팅방 퇴장 실패: 방이 존재하지 않거나 이미 퇴장한 상태입니다\n";
 
         auto socket = clients_[clientId];
         if (socket && socket->is_open()) {

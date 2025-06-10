@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QWidget>
+#include <QCloseEvent>
 #include <QString>
 #include <memory>
 
@@ -14,17 +15,20 @@ class GroupChatWindow : public QWidget {
     Q_OBJECT
 
 public:
-    explicit GroupChatWindow(QWidget *parent = nullptr);
+    explicit GroupChatWindow(const QString& roomName, QWidget *parent = nullptr);
     ~GroupChatWindow();
 
-    void setRoomTitle(const QString& roomName);
     void appendMessage(const QString& msg);
-    QString getInputText() const;
-    QString getRoomTitle() const { return roomTitle; }
+    void setRoomTitle(const QString& roomName);
     void updateUserList(const QStringList& users);
+    QString getInputText() const;
+    QString getRoomTitle() const { return roomName_; }
+
+protected:
+    void closeEvent(QCloseEvent* event) override;
 
 signals:
-    void sendMessageRequested(const QString& message);
+    void sendCommand(const QString& command);
     void requestRoomUserList(const QString& roomName);
 
 private slots:
@@ -33,10 +37,9 @@ private slots:
 
 private:
     void loadMessageHistory();
-    void saveMessage(const QString& message);
+    void saveMessageHistory(const QString& message);
 
     Ui::GroupChatWindow *ui;
-    QString roomTitle;
-
-    std::unique_ptr<UserListWindow> userListWindow;
+    QString roomName_;
+    UserListWindow* userListWindow = nullptr;
 };

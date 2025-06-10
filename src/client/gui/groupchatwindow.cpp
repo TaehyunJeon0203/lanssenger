@@ -6,11 +6,16 @@
 #include <QTextStream>
 #include <QDir>
 #include <QDateTime>
+#include <QCloseEvent>
+#include "client/gui/mainwindow.hpp"
 
-GroupChatWindow::GroupChatWindow(QWidget *parent)
-    : QWidget(parent), ui(new Ui::GroupChatWindow)
+GroupChatWindow::GroupChatWindow(const QString& roomName, QWidget* parent)
+    : QWidget(parent)
+    , ui(new Ui::GroupChatWindow)
+    , roomName_(roomName)
 {
     ui->setupUi(this);
+    setWindowTitle(roomName);
     setWindowFlags(Qt::Window | Qt::WindowCloseButtonHint);
     ui->GCChatDisplay->setReadOnly(true);
 
@@ -22,12 +27,24 @@ GroupChatWindow::GroupChatWindow(QWidget *parent)
     // 이전 메시지 로드
     loadMessageHistory();
 
+    // 방 입장 요청
+    QString joinCommand = QString("/join_room %1\n").arg(roomName);
+    emit sendCommand(joinCommand);
+
+    // 사용자 목록 요청
+    QString userListCommand = QString("/room_users %1\n").arg(roomName);
+    emit sendCommand(userListCommand);
+
+    // 버튼 연결
     connect(ui->GCSendButton, &QPushButton::clicked, this, &GroupChatWindow::onSendButtonClicked);
     connect(ui->GCMessageInput, &QLineEdit::returnPressed, this, &GroupChatWindow::onSendButtonClicked);
     connect(ui->GCUserListButton, &QPushButton::clicked, this, &GroupChatWindow::onUserListButtonClicked);
 }
 
 GroupChatWindow::~GroupChatWindow() {
+    // 방 퇴장 요청
+    QString leaveCommand = QString("/leave_room %1\n").arg(roomName_);
+    emit sendCommand(leaveCommand);
     delete ui;
 }
 
@@ -35,7 +52,7 @@ void GroupChatWindow::loadMessageHistory() {
     QString historyPath = QDir::homePath() + "/.lanssenger/history/";
     QDir().mkpath(historyPath);
     
-    QFile file(historyPath + roomTitle + ".txt");
+    QFile file(historyPath + roomName_ + ".txt");
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream in(&file);
         while (!in.atEnd()) {
@@ -45,11 +62,11 @@ void GroupChatWindow::loadMessageHistory() {
     }
 }
 
-void GroupChatWindow::saveMessage(const QString& message) {
+void GroupChatWindow::saveMessageHistory(const QString& message) {
     QString historyPath = QDir::homePath() + "/.lanssenger/history/";
     QDir().mkpath(historyPath);
     
-    QFile file(historyPath + roomTitle + ".txt");
+    QFile file(historyPath + roomName_ + ".txt");
     if (file.open(QIODevice::Append | QIODevice::Text)) {
         QTextStream out(&file);
         out << message << "\n";
@@ -59,7 +76,7 @@ void GroupChatWindow::saveMessage(const QString& message) {
 
 void GroupChatWindow::appendMessage(const QString& msg) {
     ui->GCChatDisplay->append(msg);
-    saveMessage(msg);
+    saveMessageHistory(msg);
 }
 
 QString GroupChatWindow::getInputText() const {
@@ -67,7 +84,7 @@ QString GroupChatWindow::getInputText() const {
 }
 
 void GroupChatWindow::setRoomTitle(const QString& roomName) {
-    roomTitle = roomName;
+    roomName_ = roomName;
     ui->currentRoomLabel->setText("방 이름: " + roomName);
     loadMessageHistory(); // 방 제목이 설정될 때 메시지 히스토리 로드
 }
@@ -75,17 +92,18 @@ void GroupChatWindow::setRoomTitle(const QString& roomName) {
 void GroupChatWindow::onSendButtonClicked() {
     QString msg = getInputText();
     if (!msg.isEmpty()) {
-        emit sendMessageRequested(msg);
+        QString command = QString("/room_msg %1 %2\n").arg(roomName_).arg(msg);
+        emit sendCommand(command);
         ui->GCMessageInput->clear();
     }
 }
 
 void GroupChatWindow::onUserListButtonClicked() {
-    if (!roomTitle.isEmpty()) {
-        emit requestRoomUserList(roomTitle);  // MainWindow에서 /room_users 요청
+    if (!roomName_.isEmpty()) {
+        emit requestRoomUserList(roomName_);  // MainWindow에서 /room_users 요청
 
         if (!userListWindow) {
-            userListWindow = std::make_unique<UserListWindow>(this);
+            userListWindow = new UserListWindow(this);
             userListWindow->setTitle("대화 상대");
         }
 
@@ -98,11 +116,18 @@ void GroupChatWindow::onUserListButtonClicked() {
 
 void GroupChatWindow::updateUserList(const QStringList& users) {
     if (!userListWindow) {
-        userListWindow = std::make_unique<UserListWindow>(this);
+        userListWindow = new UserListWindow(this);
         userListWindow->setTitle("대화 상대");
     }
     userListWindow->updateUserList(users);
     userListWindow->show();
     userListWindow->raise();
     userListWindow->activateWindow();
+}
+
+void GroupChatWindow::closeEvent(QCloseEvent* event) {
+    // 방 퇴장 요청
+    QString leaveCommand = QString("/leave_room %1\n").arg(roomName_);
+    emit sendCommand(leaveCommand);
+    event->accept();
 }

@@ -213,10 +213,9 @@ void MainWindow::createNewRoom() {
         });
 
         // 새 창 열기
-        auto newGroupChatWindow = std::make_unique<GroupChatWindow>(this);
-        connect(newGroupChatWindow.get(), &GroupChatWindow::sendMessageRequested, this, &MainWindow::sendGroupMessage);
+        auto newGroupChatWindow = std::make_unique<GroupChatWindow>(roomName, this);
+        connect(newGroupChatWindow.get(), &GroupChatWindow::sendCommand, this, &MainWindow::sendGroupMessage);
         connect(newGroupChatWindow.get(), &GroupChatWindow::requestRoomUserList, this, &MainWindow::requestRoomUserList);
-        newGroupChatWindow->setRoomTitle(roomName);
         newGroupChatWindow->show();
         groupChatWindows.push_back(std::move(newGroupChatWindow));
     }
@@ -240,10 +239,9 @@ void MainWindow::joinSelectedRoom() {
         }
 
         // 열려있는 창이 없으면 새로 생성
-        auto newGroupChatWindow = std::make_unique<GroupChatWindow>(this);
-        connect(newGroupChatWindow.get(), &GroupChatWindow::sendMessageRequested, this, &MainWindow::sendGroupMessage);
+        auto newGroupChatWindow = std::make_unique<GroupChatWindow>(roomName, this);
+        connect(newGroupChatWindow.get(), &GroupChatWindow::sendCommand, this, &MainWindow::sendGroupMessage);
         connect(newGroupChatWindow.get(), &GroupChatWindow::requestRoomUserList, this, &MainWindow::requestRoomUserList);
-        newGroupChatWindow->setRoomTitle(roomName);
         newGroupChatWindow->show();
         groupChatWindows.push_back(std::move(newGroupChatWindow));
     }
@@ -273,25 +271,33 @@ void MainWindow::joinSelectedPrivateRoom() {
             }
 
             // 열려있는 창이 없으면 새로 생성
-            auto newGroupChatWindow = std::make_unique<GroupChatWindow>(this);
-            connect(newGroupChatWindow.get(), &GroupChatWindow::sendMessageRequested, this, &MainWindow::sendGroupMessage);
+            auto newGroupChatWindow = std::make_unique<GroupChatWindow>(roomName, this);
+            connect(newGroupChatWindow.get(), &GroupChatWindow::sendCommand, this, &MainWindow::sendGroupMessage);
             connect(newGroupChatWindow.get(), &GroupChatWindow::requestRoomUserList, this, &MainWindow::requestRoomUserList);
-            newGroupChatWindow->setRoomTitle(roomName);
             newGroupChatWindow->show();
             groupChatWindows.push_back(std::move(newGroupChatWindow));
         }
     }
 }
 
-void MainWindow::sendGroupMessage(const QString& msg) {
-    if (msg.isEmpty() || currentRoomName.isEmpty()) return;
-
-    QString command = QString("/room_msg %1 %2").arg(currentRoomName).arg(msg);
-    chatClient->sendMessage(command.toStdString());
+void MainWindow::sendGroupMessage(const QString& command) {
+    if (chatClient) {
+        chatClient->sendMessage(command.toStdString());
+    }
 }
 
 void MainWindow::requestRoomUserList(const QString& roomName) {
     if (chatClient) {
         chatClient->sendMessage(QString("/room_users %1").arg(roomName).toStdString());
+    }
+}
+
+void MainWindow::removeGroupChatWindow(GroupChatWindow* window) {
+    auto it = std::find_if(groupChatWindows.begin(), groupChatWindows.end(),
+        [window](const std::unique_ptr<GroupChatWindow>& ptr) {
+            return ptr.get() == window;
+        });
+    if (it != groupChatWindows.end()) {
+        groupChatWindows.erase(it);
     }
 }

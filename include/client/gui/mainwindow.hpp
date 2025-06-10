@@ -46,6 +46,7 @@ private slots:
     void joinSelectedPrivateRoom();
     void sendGroupMessage(const QString& msg);
     void requestRoomUserList(const QString& roomName);
+    void removeGroupChatWindow(GroupChatWindow* window);
 };
 
 #endif // MAINWINDOW_HPP
