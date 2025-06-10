@@ -35,7 +35,7 @@ color: #26313E;
    <property name="geometry">
     <rect>
      <x>287</x>
-     <y>16</y>
+     <y>15</y>
      <width>80</width>
      <height>30</height>
     </rect>

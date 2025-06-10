@@ -27,7 +27,7 @@
      <string notr="true">background-color: #C6C1BD</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="mainChatWidget">
      <widget class="QTextEdit" name="chatDisplay">
@@ -186,7 +186,7 @@ color: #26313E;
      <widget class="QLabel" name="currentRoomLabel">
       <property name="geometry">
        <rect>
-        <x>141</x>
+        <x>143</x>
         <y>10</y>
         <width>111</width>
         <height>31</height>
