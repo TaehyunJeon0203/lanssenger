@@ -34,7 +34,7 @@ color: #26313E;
   <widget class="QPushButton" name="GCUserListButton">
    <property name="geometry">
     <rect>
-     <x>287</x>
+     <x>17</x>
      <y>15</y>
      <width>80</width>
      <height>30</height>

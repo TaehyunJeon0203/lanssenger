@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>유저목록</string>
+   <string>대화 상대</string>
   </property>
   <property name="styleSheet">
    <string notr="true">background-color: #C6C1BD</string>

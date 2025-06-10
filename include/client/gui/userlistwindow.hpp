@@ -2,6 +2,7 @@
 #define USERLISTWINDOW_HPP
 
 #include <QWidget>
+#include <memory>
 #include <QStringList>
 
 namespace Ui {
@@ -16,6 +17,7 @@ public:
     ~UserListWindow();
 
     void updateUserList(const QStringList& users);
+    void setTitle(const QString& title);
 
 private:
     Ui::UserListWindow *ui;

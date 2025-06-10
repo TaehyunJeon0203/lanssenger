@@ -158,16 +158,7 @@ void MainWindow::appendMessage(const QString& message) {
             }
         } else if (message.startsWith("ROOM_USER_LIST:")) {
             QStringList users = message.mid(15).split(",", Qt::SkipEmptyParts);
-            if (!userListWindow) {
-                userListWindow = std::make_unique<UserListWindow>(this);
-            }
-            userListWindow->updateUserList(users);
-            userListWindow->show();
-            userListWindow->raise();
-            userListWindow->activateWindow();
-        } else if (message.startsWith("ROOM_USER_LIST:")) {
-            QStringList users = message.mid(15).split(",", Qt::SkipEmptyParts);
-
+            
             // 현재 열려 있는 그룹채팅 창 중 roomTitle이 같은 창 찾아서 updateUserList 호출
             for (const auto& window : groupChatWindows) {
                 if (window->getRoomTitle() == currentRoomName) {

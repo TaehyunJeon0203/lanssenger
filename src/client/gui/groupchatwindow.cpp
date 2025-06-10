@@ -86,6 +86,7 @@ void GroupChatWindow::onUserListButtonClicked() {
 
         if (!userListWindow) {
             userListWindow = std::make_unique<UserListWindow>(this);
+            userListWindow->setTitle("대화 상대");
         }
 
         // 나중에 updateUserList로 갱신
