@@ -80,7 +80,7 @@ color: #26313E; </string>
   <widget class="QLabel" name="currentRoomLabel">
    <property name="geometry">
     <rect>
-     <x>136</x>
+     <x>139</x>
      <y>10</y>
      <width>271</width>
      <height>31</height>
@@ -88,7 +88,7 @@ color: #26313E; </string>
    </property>
    <property name="font">
     <font>
-     <family>Noto Sans KR</family>
+     <family>휴먼옛체</family>
      <pointsize>16</pointsize>
     </font>
    </property>
