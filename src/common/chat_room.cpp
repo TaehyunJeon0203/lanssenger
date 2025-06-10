@@ -1,5 +1,6 @@
 #include "common/chat_room.hpp"
 #include <algorithm>
+#include <iostream>
 
 namespace lanssenger {
 
