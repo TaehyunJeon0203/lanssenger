@@ -21,6 +21,9 @@ public:
 
 private:
     Ui::UserListWindow *ui;
+
+protected:
+    void showEvent(QShowEvent* event) override;
 };
 
 #endif // USERLISTWINDOW_HPP
