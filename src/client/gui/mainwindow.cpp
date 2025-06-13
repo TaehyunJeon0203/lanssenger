@@ -253,13 +253,6 @@ void MainWindow::createNewRoom() {
         QTimer::singleShot(500, this, [this]() {
             chatClient->sendMessage("/list_rooms");
         });
-
-        // 새 창 열기
-        auto newGroupChatWindow = std::make_unique<GroupChatWindow>(roomName, this);
-        connect(newGroupChatWindow.get(), &GroupChatWindow::sendCommand, this, &MainWindow::sendGroupMessage);
-        connect(newGroupChatWindow.get(), &GroupChatWindow::requestRoomUserList, this, &MainWindow::requestRoomUserList);
-        newGroupChatWindow->show();
-        groupChatWindows.push_back(std::move(newGroupChatWindow));
     }
 }
 
