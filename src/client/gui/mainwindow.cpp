@@ -71,7 +71,9 @@ void MainWindow::connectToServer() {
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect screenGeometry = screen->availableGeometry();
     this->move(screenGeometry.center() - this->rect().center());
-    QSettings settings;
+    
+    // QSettings의 저장 위치를 명시적으로 지정
+    QSettings settings(QSettings::IniFormat, QSettings::UserScope, "LANssenger", "LANssenger");
     QString savedNickname = settings.value("nickname").toString();
     bool ok;
 
@@ -85,6 +87,7 @@ void MainWindow::connectToServer() {
         }
         // 닉네임 저장
         settings.setValue("nickname", nickname);
+        settings.sync();  // 설정 즉시 저장
     } else {
         nickname = QInputDialog::getText(this, "닉네임 입력", "사용할 닉네임을 입력하세요:", QLineEdit::Normal, savedNickname, &ok);
         if (!ok) {
@@ -94,6 +97,7 @@ void MainWindow::connectToServer() {
         if (nickname != savedNickname) {
             // 닉네임이 변경된 경우 저장
             settings.setValue("nickname", nickname);
+            settings.sync();  // 설정 즉시 저장
         }
     }
 
