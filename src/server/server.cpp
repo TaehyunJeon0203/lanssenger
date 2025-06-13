@@ -282,7 +282,7 @@ void Server::handleClientData(const std::string& clientId, const std::string& da
             // 방의 모든 멤버에게 메시지 전송
             std::string nickname = ActiveUsersManager::getInstance().getNickname(clientId);
             std::string ipLastThree = ActiveUsersManager::getInstance().getAllActiveUsers()[clientId].ipLastThree;
-            std::string formattedMessage = "ROOM_MSG:" + nickname + "(" + ipLastThree + "): " + message + "\n";
+            std::string formattedMessage = "ROOM_MSG:채팅방 [" + roomName + "] " + nickname + "(" + ipLastThree + "): " + message + "\n";
             
             for (const auto& memberId : roomInfo->members) {
                 auto memberSocket = clients_[memberId];
