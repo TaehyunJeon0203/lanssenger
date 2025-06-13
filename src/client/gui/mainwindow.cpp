@@ -192,6 +192,7 @@ void MainWindow::appendMessage(const QString& message) {
             userListWindow->activateWindow();
         } else if (message.startsWith("ROOM_MSG:")) {
             QString roomMsg = message.mid(9);
+            // 현재 활성화된 방의 창에 메시지 표시
             for (const auto& window : groupChatWindows) {
                 if (window->getRoomTitle() == currentRoomName) {
                     window->appendMessage(roomMsg);

@@ -272,36 +272,22 @@ void Server::handleClientData(const std::string& clientId, const std::string& da
         std::string cmd, roomName, message;
         iss >> cmd >> roomName;
         
-        // 나머지 메시지 내용을 가져옴
+        // 나머지 메시지 부분을 모두 읽음
         std::getline(iss, message);
-        if (!message.empty() && message[0] == ' ') {
-            message = message.substr(1); // 앞의 공백 제거
-        }
-
-        auto& roomManager = ChatRoomManager::getInstance();
-        auto* roomInfo = roomManager.getRoomInfo(roomName);
+        message = message.substr(1); // 앞의 공백 제거
         
+        // 현재 사용자가 참여 중인 방인지 확인
+        auto* roomInfo = ChatRoomManager::getInstance().getRoomInfo(roomName);
         if (roomInfo && roomInfo->members.find(clientId) != roomInfo->members.end()) {
-            auto& userManager = ActiveUsersManager::getInstance();
-            std::string nickname = userManager.isUserActive(clientId)
-                ? userManager.getAllActiveUsers()[clientId].nickname
-                : clientId;
-            std::string ipLastThree = userManager.isUserActive(clientId)
-                ? userManager.getAllActiveUsers()[clientId].ipLastThree
-                : clientId.substr(clientId.find_last_of(":") + 1);
-
+            // 방의 모든 멤버에게 메시지 전송
+            std::string nickname = ActiveUsersManager::getInstance().getNickname(clientId);
+            std::string ipLastThree = ActiveUsersManager::getInstance().getAllActiveUsers()[clientId].ipLastThree;
             std::string formattedMessage = "ROOM_MSG:" + nickname + "(" + ipLastThree + "): " + message + "\n";
             
-            // 방에 있는 모든 멤버에게 메시지 전송
             for (const auto& memberId : roomInfo->members) {
-                auto it = clients_.find(memberId);
-                if (it != clients_.end() && it->second && it->second->is_open()) {
-                    boost::system::error_code ec;
-                    boost::asio::write(*it->second, boost::asio::buffer(formattedMessage), ec);
-                    if (ec) {
-                        std::cerr << "[서버] 방 메시지 전송 실패: " << ec.message() << std::endl;
-                        handleClientDisconnection(memberId);
-                    }
+                auto memberSocket = clients_[memberId];
+                if (memberSocket && memberSocket->is_open()) {
+                    boost::asio::write(*memberSocket, boost::asio::buffer(formattedMessage));
                 }
             }
         }
@@ -387,26 +373,23 @@ void Server::handleClientData(const std::string& clientId, const std::string& da
         }
     }
     else {
+        // 일반 메시지 처리
         auto& userManager = ActiveUsersManager::getInstance();
-        std::string nickname = userManager.isUserActive(clientId)
-            ? userManager.getAllActiveUsers()[clientId].nickname
-            : clientId;
+        std::string nickname = userManager.getNickname(clientId);
         std::string ipLastThree = userManager.isUserActive(clientId)
             ? userManager.getAllActiveUsers()[clientId].ipLastThree
             : clientId.substr(clientId.find_last_of(":") + 1);
 
-        std::string message = nickname + "(" + ipLastThree + "): " + data;
+        std::string message = nickname + "(" + ipLastThree + "): " + trimmedData + "\n";
         for (const auto& [id, socket] : clients_) {
             if (socket && socket->is_open()) {
                 try {
                     boost::system::error_code ec;
-                    size_t written = boost::asio::write(*socket, boost::asio::buffer(message), ec);
+                    boost::asio::write(*socket, boost::asio::buffer(message), ec);
                     
                     if (ec) {
                         std::cerr << "[서버] 메시지 전송 실패: " << ec.message() << std::endl;
                         handleClientDisconnection(id);
-                    } else {
-                        std::cout << "[서버] 메시지 전송 완료: " << written << " bytes" << std::endl;
                     }
                 } catch (const std::exception& e) {
                     std::cerr << "[서버] 메시지 전송 중 오류: " << e.what() << std::endl;

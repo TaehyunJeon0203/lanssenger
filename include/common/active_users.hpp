@@ -18,6 +18,7 @@ public:
     void addUser(const std::string& userId, const std::string& nickname, const std::string& ipAddress);
     void removeUser(const std::string& userId);
     void updateNickname(const std::string& userId, const std::string& nickname);
+    std::string getNickname(const std::string& userId) const;
     
     std::unordered_map<std::string, UserConnectionInfo> getAllActiveUsers() const;
     bool isUserActive(const std::string& userId) const;

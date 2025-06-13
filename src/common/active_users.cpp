@@ -45,4 +45,13 @@ void ActiveUsersManager::updateNickname(const std::string& userId, const std::st
         activeUsers_[userId].nickname = nickname;
     }
 }
+
+std::string ActiveUsersManager::getNickname(const std::string& userId) const {
+    std::lock_guard<std::mutex> lock(mutex_);
+    auto it = activeUsers_.find(userId);
+    if (it != activeUsers_.end()) {
+        return it->second.nickname;
+    }
+    return userId;  // 사용자를 찾을 수 없는 경우 userId 반환
+}
 } // namespace lanssenger 
