@@ -7,6 +7,7 @@
 #include <array>
 #include <memory>
 #include <string>
+#include <cstdio>
 
 NicknameManager& NicknameManager::getInstance() {
     static NicknameManager instance;
@@ -18,13 +19,35 @@ NicknameManager::NicknameManager() {}
 std::string NicknameManager::getLocalIpAddress() {
 #if defined(_WIN32)
     std::string cmd = "ipconfig";
+    #define popen _popen
+    #define pclose _pclose
 #elif defined(__APPLE__)
     std::string cmd = "ipconfig getifaddr en0";
 #else
     std::string cmd = "hostname -I";
 #endif
-    std::array<char, 128> buffer;
+    std::array<char, 256> buffer;
     std::string result;
+#if defined(_WIN32)
+    std::string ip = "127.0.0.1";
+    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd.c_str(), "r"), pclose);
+    if (!pipe) return ip;
+    while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) {
+        std::string line(buffer.data());
+        // 영문 윈도우: "IPv4 Address", 한글 윈도우: "IPv4 주소"
+        if (line.find("IPv4") != std::string::npos) {
+            auto pos = line.find(":");
+            if (pos != std::string::npos) {
+                ip = line.substr(pos + 1);
+                // 앞뒤 공백 제거
+                ip.erase(0, ip.find_first_not_of(" \t\r\n"));
+                ip.erase(ip.find_last_not_of(" \t\r\n") + 1);
+                break;
+            }
+        }
+    }
+    return ip;
+#else
     std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd.c_str(), "r"), pclose);
     if (!pipe) return "127.0.0.1";
     while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) {
@@ -32,19 +55,8 @@ std::string NicknameManager::getLocalIpAddress() {
     }
     // 결과에서 개행 문자 제거
     result.erase(std::remove(result.begin(), result.end(), '\n'), result.end());
-#if defined(_WIN32)
-    // 윈도우의 경우 ipconfig 결과에서 IPv4 Address만 추출
-    auto pos = result.find("IPv4");
-    if (pos != std::string::npos) {
-        auto ip_start = result.find(":", pos);
-        if (ip_start != std::string::npos) {
-            result = result.substr(ip_start + 1);
-            // 공백 제거
-            result.erase(0, result.find_first_not_of(" \t"));
-        }
-    }
-#endif
     return result.empty() ? "127.0.0.1" : result;
+#endif
 }
 
 std::string NicknameManager::getLocalIpAddress(const std::string& interface) {
