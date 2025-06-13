@@ -13,6 +13,8 @@
 #include "client/gui/groupchatwindow.hpp"
 #include <memory>
 #include <QTimer>
+#include <QGuiApplication>
+#include <QScreen>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -66,7 +68,9 @@ void MainWindow::setupConnections() {
 }
 
 void MainWindow::connectToServer() {
-    this->move(QApplication::desktop()->screen()->rect().center() - this->rect().center());
+    QScreen *screen = QGuiApplication::primaryScreen();
+    QRect screenGeometry = screen->availableGeometry();
+    this->move(screenGeometry.center() - this->rect().center());
     QSettings settings;
     QString savedNickname = settings.value("nickname").toString();
     bool ok;
