@@ -66,6 +66,7 @@ void MainWindow::setupConnections() {
 }
 
 void MainWindow::connectToServer() {
+    this->move(QApplication::desktop()->screen()->rect().center() - this->rect().center());
     QSettings settings;
     QString savedNickname = settings.value("nickname").toString();
     bool ok;
