@@ -192,11 +192,16 @@ void MainWindow::appendMessage(const QString& message) {
             userListWindow->activateWindow();
         } else if (message.startsWith("ROOM_MSG:")) {
             QString roomMsg = message.mid(9);
-            // 현재 활성화된 방의 창에 메시지 표시
-            for (const auto& window : groupChatWindows) {
-                if (window->getRoomTitle() == currentRoomName) {
-                    window->appendMessage(roomMsg);
-                    break;
+            // 메시지에서 방 이름 추출 (예: "채팅방 [방이름] 닉네임(ip): 메시지")
+            int start = roomMsg.indexOf("[") + 1;
+            int end = roomMsg.indexOf("]");
+            if (start > 0 && end > start) {
+                QString roomName = roomMsg.mid(start, end - start);
+                for (const auto& window : groupChatWindows) {
+                    if (window->getRoomTitle() == roomName) {
+                        window->appendMessage(roomMsg);
+                        break;
+                    }
                 }
             }
         } else {

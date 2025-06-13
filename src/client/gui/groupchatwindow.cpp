@@ -75,8 +75,14 @@ void GroupChatWindow::saveMessageHistory(const QString& message) {
 }
 
 void GroupChatWindow::appendMessage(const QString& msg) {
-    ui->GCChatDisplay->append(msg);
-    saveMessageHistory(msg);
+    // 메시지에서 방 이름 부분 제거 (예: "채팅방 [방이름] 닉네임(ip): 메시지" -> "닉네임(ip): 메시지")
+    QString displayMsg = msg;
+    int start = displayMsg.indexOf("]") + 2;  // "] " 다음부터
+    if (start > 1) {
+        displayMsg = displayMsg.mid(start);
+    }
+    ui->GCChatDisplay->append(displayMsg);
+    saveMessageHistory(displayMsg);
 }
 
 QString GroupChatWindow::getInputText() const {
