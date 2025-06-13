@@ -15,6 +15,7 @@
 #include <QTimer>
 #include <QGuiApplication>
 #include <QScreen>
+#include "client/nickname_manager.hpp"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -148,7 +149,9 @@ void MainWindow::connectToServer() {
 
     chatClient->start();
     ui->statusLabel->setText("연결됨");
-    chatClient->sendMessage("/nickname " + nickname.toStdString());
+    // 닉네임에 IP 끝자리를 붙여서 전송
+    std::string fullNickname = NicknameManager::getInstance().generateNickname(nickname.toStdString());
+    chatClient->sendMessage("/nickname " + fullNickname);
 }
 
 void MainWindow::sendMessage() {

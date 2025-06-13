@@ -4,6 +4,9 @@
 #include <regex>
 #include <iostream>
 #include <boost/asio.hpp>
+#include <array>
+#include <memory>
+#include <string>
 
 NicknameManager& NicknameManager::getInstance() {
     static NicknameManager instance;
@@ -13,25 +16,39 @@ NicknameManager& NicknameManager::getInstance() {
 NicknameManager::NicknameManager() {}
 
 std::string NicknameManager::getLocalIpAddress() {
-    try {
-        boost::asio::ip::udp::socket socket(io_context_);
-        socket.connect(boost::asio::ip::udp::endpoint(
-            boost::asio::ip::make_address("8.8.8.8"), 53));
-        return socket.local_endpoint().address().to_string();
-    } catch (const std::exception& e) {
-        return "127.0.0.1"; // 기본값으로 localhost 반환
+#if defined(_WIN32)
+    std::string cmd = "ipconfig";
+#elif defined(__APPLE__)
+    std::string cmd = "ipconfig getifaddr en0";
+#else
+    std::string cmd = "hostname -I";
+#endif
+    std::array<char, 128> buffer;
+    std::string result;
+    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd.c_str(), "r"), pclose);
+    if (!pipe) return "127.0.0.1";
+    while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) {
+        result += buffer.data();
     }
+    // 결과에서 개행 문자 제거
+    result.erase(std::remove(result.begin(), result.end(), '\n'), result.end());
+#if defined(_WIN32)
+    // 윈도우의 경우 ipconfig 결과에서 IPv4 Address만 추출
+    auto pos = result.find("IPv4");
+    if (pos != std::string::npos) {
+        auto ip_start = result.find(":", pos);
+        if (ip_start != std::string::npos) {
+            result = result.substr(ip_start + 1);
+            // 공백 제거
+            result.erase(0, result.find_first_not_of(" \t"));
+        }
+    }
+#endif
+    return result.empty() ? "127.0.0.1" : result;
 }
 
 std::string NicknameManager::getLocalIpAddress(const std::string& interface) {
-    try {
-        boost::asio::ip::udp::socket socket(io_context_);
-        socket.connect(boost::asio::ip::udp::endpoint(
-            boost::asio::ip::make_address("8.8.8.8"), 53));
-        return socket.local_endpoint().address().to_string();
-    } catch (const std::exception& e) {
-        return "127.0.0.1"; // 기본값으로 localhost 반환
-    }
+    return getLocalIpAddress();
 }
 
 std::string NicknameManager::generateNickname(const std::string& baseName) {
@@ -40,7 +57,7 @@ std::string NicknameManager::generateNickname(const std::string& baseName) {
 
 std::string NicknameManager::generateNickname(const std::string& baseName, const std::string& ipAddress) {
     std::string suffix = generateSuffix(ipAddress);
-    return baseName + "." + suffix;
+    return baseName + "(." + suffix + ")";
 }
 
 bool NicknameManager::isValidNickname(const std::string& nickname) {

@@ -281,8 +281,7 @@ void Server::handleClientData(const std::string& clientId, const std::string& da
         if (roomInfo && roomInfo->members.find(clientId) != roomInfo->members.end()) {
             // 방의 모든 멤버에게 메시지 전송
             std::string nickname = ActiveUsersManager::getInstance().getNickname(clientId);
-            std::string ipLastThree = ActiveUsersManager::getInstance().getAllActiveUsers()[clientId].ipLastThree;
-            std::string formattedMessage = "ROOM_MSG:채팅방 [" + roomName + "] " + nickname + "(" + ipLastThree + "): " + message + "\n";
+            std::string formattedMessage = "ROOM_MSG:채팅방 [" + roomName + "] " + nickname + ": " + message + "\n";
             
             for (const auto& memberId : roomInfo->members) {
                 auto memberSocket = clients_[memberId];
@@ -305,7 +304,7 @@ void Server::handleClientData(const std::string& clientId, const std::string& da
                 const auto& activeUsers = ActiveUsersManager::getInstance().getAllActiveUsers();
                 auto it = activeUsers.find(userId);
                 if (it != activeUsers.end()) {
-                    response += it->second.nickname + "(" + it->second.ipLastThree + "),";
+                    response += it->second.nickname + ",";
                     hasUsers = true;
                 }
             }
@@ -376,11 +375,7 @@ void Server::handleClientData(const std::string& clientId, const std::string& da
         // 일반 메시지 처리
         auto& userManager = ActiveUsersManager::getInstance();
         std::string nickname = userManager.getNickname(clientId);
-        std::string ipLastThree = userManager.isUserActive(clientId)
-            ? userManager.getAllActiveUsers()[clientId].ipLastThree
-            : clientId.substr(clientId.find_last_of(":") + 1);
-
-        std::string message = nickname + "(" + ipLastThree + "): " + trimmedData + "\n";
+        std::string message = nickname + ": " + trimmedData + "\n";
         for (const auto& [id, socket] : clients_) {
             if (socket && socket->is_open()) {
                 try {
@@ -406,7 +401,7 @@ void Server::broadcastActiveUsers()
     std::string userList = "USER_LIST:";
     
     for (const auto& [userId, info] : activeUsers) {
-        userList += info.nickname + "(" + info.ipLastThree + "),";
+        userList += info.nickname + ",";
     }
     
     if (!userList.empty() && userList.back() == ',') {
