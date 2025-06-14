@@ -14,6 +14,17 @@ if [ -d /opt/homebrew/opt/qt@6/lib/QtDBus.framework ]; then
   sudo chown -R $(whoami) client_gui.app/Contents/Frameworks/QtDBus.framework
 fi
 
+# 2-1. QtDBus가 필요로 하는 libdbus-1.3.dylib도 번들에 복사
+if [ -f /opt/homebrew/opt/dbus/lib/libdbus-1.3.dylib ]; then
+  cp /opt/homebrew/opt/dbus/lib/libdbus-1.3.dylib client_gui.app/Contents/Frameworks/
+  
+  # 2-2. QtDBus.framework의 libdbus-1.3.dylib 의존성 경로를 번들 내부로 변경
+  install_name_tool -change /opt/homebrew/opt/dbus/lib/libdbus-1.3.dylib @executable_path/../Frameworks/libdbus-1.3.dylib client_gui.app/Contents/Frameworks/QtDBus.framework/Versions/A/QtDBus
+  
+  # 2-3. libdbus-1.3.dylib의 ID를 번들 내부 경로로 변경
+  install_name_tool -id @executable_path/../Frameworks/libdbus-1.3.dylib client_gui.app/Contents/Frameworks/libdbus-1.3.dylib
+fi
+
 # 3. 코드 서명 (ad-hoc)
 codesign --deep --force --sign - client_gui.app
 
