@@ -28,3 +28,7 @@ Makefile
 # 빌드 산출물 및 배포 파일 무시
 client_gui.app/
 client_gui.zip
+client_gui.exe
+
+# Qt translations 무시
+translations/*.qm 
