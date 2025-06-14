@@ -23,4 +23,8 @@ Makefile
 *.dylib
 
 # macOS specific
-.DS_Store 
+.DS_Store
+
+# 빌드 산출물 및 배포 파일 무시
+client_gui.app/
+client_gui.zip

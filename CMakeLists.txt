@@ -72,7 +72,7 @@ if(NOT DEFINED BUILD_SERVER_ONLY)
     )
 
     # GUI 클라이언트 실행 파일
-    add_executable(client_gui
+    add_executable(client_gui MACOSX_BUNDLE
         src/client/gui/main_gui.cpp
         src/client/nickname_manager.cpp
         src/client/gui/mainwindow.cpp
