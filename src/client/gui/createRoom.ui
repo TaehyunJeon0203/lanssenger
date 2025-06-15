@@ -19,7 +19,7 @@
   <widget class="QLabel" name="createRoomlabel">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>125</x>
      <y>30</y>
      <width>151</width>
      <height>31</height>
@@ -49,7 +49,7 @@
     <rect>
      <x>100</x>
      <y>100</y>
-     <width>191</width>
+     <width>201</width>
      <height>22</height>
     </rect>
    </property>
@@ -64,7 +64,7 @@ color: #26313E;
     <rect>
      <x>100</x>
      <y>140</y>
-     <width>121</width>
+     <width>71</width>
      <height>20</height>
     </rect>
    </property>
@@ -102,7 +102,7 @@ color: #26313E; </string>
   <widget class="QPushButton" name="createRoomButton">
    <property name="geometry">
     <rect>
-     <x>150</x>
+     <x>165</x>
      <y>220</y>
      <width>80</width>
      <height>30</height>
