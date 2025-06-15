@@ -31,4 +31,6 @@ client_gui.zip
 client_gui.exe
 
 # Qt translations 무시
-translations/*.qm 
+translations/
+translations/*.qm
+translations/qt_*.qm 
