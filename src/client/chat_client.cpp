@@ -9,15 +9,20 @@ ChatClient::~ChatClient() {
 
 bool ChatClient::connect(const std::string& host, unsigned short port) {
     try {
+        // DNS 리졸버를 생성하여 호스트 이름을 IP 주소로 변환
         boost::asio::ip::tcp::resolver resolver(io_context_);
+        // 호스트 이름과 포트를 사용하여 연결 가능한 엔드포인트 목록을 가져옴
         auto endpoints = resolver.resolve(host, std::to_string(port));
         
+        // 가져온 엔드포인트 중 하나에 연결 시도
         boost::asio::connect(socket_, endpoints);
         std::cout << "서버에 연결되었습니다." << std::endl;
         
+        // 연결 성공 시 클라이언트 실행 상태를 활성화
         running_ = true;
         return true;
     } catch (const std::exception& e) {
+        // 연결 실패 시 오류 메시지 출력
         std::cerr << "연결 실패: " << e.what() << std::endl;
         return false;
     }
