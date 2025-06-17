@@ -29,6 +29,7 @@ Makefile
 client_gui.app/
 client_gui.zip
 client_gui.exe
+client_gui_mac.zip
 
 # Qt translations 무시
 translations/
