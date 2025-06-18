@@ -65,13 +65,6 @@ lanssenger/
 scripts/build_client.bat   # Windows
 ```
 
-2. 서버 빌드:
-
-```bash
-./scripts/build_server.sh  # Linux/macOS
-scripts/build_server.bat   # Windows
-```
-
 ---
 
 # Lanssenger 프로그램 구조
