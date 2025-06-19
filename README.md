@@ -2,9 +2,9 @@
 
 ## 👥 Contributors
 
-- [**전태현**](https://github.com/taehyunjeon0203) -
-- [**유병연**](https://github.com/youbyeongyeon) -
-- [**이유경**](https://github.com/dldbrud) -
+- [**전태현**](https://github.com/taehyunjeon0203)
+- [**유병연**](https://github.com/youbyeongyeon)
+- [**이유경**](https://github.com/dldbrud)
 
 ## 🎯 주제
 
