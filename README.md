@@ -26,19 +26,19 @@
 
 ### 메인 화면
 
-![사용자 목록 화면](https://github.com/user-attachments/assets/976fd6b1-ddf6-4f9b-804c-1ed7ef478099)
-
-### 채팅방 화면
-
-![채팅창 화면](https://github.com/user-attachments/assets/8d9d0db3-b65d-49d8-b0c3-5d8cedbe1fe4)
+![사용자 목록 화면](https://github.com/user-attachments/assets/8d9d0db3-b65d-49d8-b0c3-5d8cedbe1fe4)
 
 ### 방 생성 화면
 
 ![방 목록 화면](https://github.com/user-attachments/assets/ae5e5b9e-4191-4afd-b8d2-334842eed18d)
 
-### 사용자 목록 화면
+### 채팅방
 
-![채팅방 화면](https://github.com/user-attachments/assets/bb5ad9a2-ed60-42ef-8a41-b14ed6ab896e)
+![채팅창 화면](https://github.com/user-attachments/assets/bb5ad9a2-ed60-42ef-8a41-b14ed6ab896e)
+
+### 사용자 목록
+
+![채팅방 화면](https://github.com/user-attachments/assets/976fd6b1-ddf6-4f9b-804c-1ed7ef478099)
 
 ## 📁 프로젝트 구조
 
